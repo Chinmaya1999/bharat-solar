@@ -32,21 +32,21 @@ const Header = () => {
   }, []);
 
   // Fetch celebration banners
-  useEffect(() => {
-    const fetchBanners = async () => {
-      try {
-        const response = await fetch('https://api.bharatsolarsolution.com/api/celebrationBanners/active');
-        if (response.ok) {
-          const data = await response.json();
-          setCelebrationBanners(data);
-        }
-      } catch (error) {
-        console.error('Error fetching banners:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBanners = async () => {
+  //     try {
+  //       const response = await fetch('https://api.bharatsolarsolution.com/api/celebrationBanners/active');
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setCelebrationBanners(data);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching banners:', error);
+  //     }
+  //   };
 
-    fetchBanners();
-  }, []);
+  //   fetchBanners();
+  // }, []);
 
   // Auto-rotate banners
   useEffect(() => {
@@ -96,7 +96,7 @@ const Header = () => {
                 <XCircle className="h-4 w-4 text-amber-600" />
               </button>
               
-              <Link to={celebrationBanners[currentBannerIndex].link || '#'}>
+              {/* <Link to={celebrationBanners[currentBannerIndex].link || '#'}>
                 <motion.img
                   key={celebrationBanners[currentBannerIndex]._id}
                   src={`https://api.bharatsolarsolution.com/${celebrationBanners[currentBannerIndex].path}`}
@@ -107,7 +107,7 @@ const Header = () => {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
                 />
-              </Link>
+              </Link> */}
               
               {/* Banner indicators */}
               {celebrationBanners.length > 1 && (
