@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -24,7 +24,7 @@ router.post('/', upload.single('resume'), async (req, res) => {
     email: req.body.email,
     phone: req.body.phone,
     resume: req.file.path,
-    coverLetter: req.body.coverLetter
+    coverLetter: req.body.coverLetter,
   });
 
   try {

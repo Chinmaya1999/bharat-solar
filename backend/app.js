@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const mongoose = require('mongoose');
 
 // Import routes
@@ -19,10 +18,14 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://chinmayadob1999:Ket3Jfd6scgKiRxI@cluster0.zgkvein.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  process.env.MONGODB_URI ||
+    'mongodb+srv://chinmayadob1999:Ket3Jfd6scgKiRxI@cluster0.zgkvein.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+);
 
 // Middleware
 app.use(cors());
@@ -44,24 +47,24 @@ app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({
-        error: 'File too large. Maximum size is 25MB.'
+        error: 'File too large. Maximum size is 25MB.',
       });
     }
-    
+
     if (error.code === 'LIMIT_UNEXPECTED_FILE') {
       return res.status(400).json({
-        error: 'Unexpected field. Please upload a single image file.'
+        error: 'Unexpected field. Please upload a single image file.',
       });
     }
   }
-  
+
   // Handle other file filter errors
   if (error.message === 'Only image files are allowed!') {
     return res.status(400).json({
-      error: 'Only image files (jpg, jpeg, png, gif, etc.) are allowed!'
+      error: 'Only image files (jpg, jpeg, png, gif, etc.) are allowed!',
     });
   }
-  
+
   next(error);
 });
 

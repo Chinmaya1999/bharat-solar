@@ -11,14 +11,14 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/products/');
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname));
-  }
+    cb(null, Date.now() + '-' + Math.round(Math.random() * 1e9) + path.extname(file.originalname));
+  },
 });
 
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 5 * 1024 * 1024, // 5MB limit
   },
   fileFilter: function (req, file, cb) {
     if (file.mimetype.startsWith('image/')) {
@@ -26,7 +26,7 @@ const upload = multer({
     } else {
       cb(new Error('Only image files are allowed!'), false);
     }
-  }
+  },
 });
 
 // GET all products
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
   try {
     const { category, page = 1, limit = 10 } = req.query;
     let query = { isActive: true };
-    
+
     if (category && category !== 'all') {
       query.category = category;
     }
@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
       products,
       totalPages: Math.ceil(total / limit),
       currentPage: parseInt(page),
-      total
+      total,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -73,20 +73,13 @@ router.get('/:id', async (req, res) => {
 // CREATE new product
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      category,
-      features,
-      specifications,
-      priceRange,
-      rating,
-      alt
-    } = req.body;
+    const { title, description, category, features, specifications, priceRange, rating, alt } =
+      req.body;
 
     // Parse JSON strings if they are strings
     const featuresArray = typeof features === 'string' ? JSON.parse(features) : features;
-    const specsObject = typeof specifications === 'string' ? JSON.parse(specifications) : specifications;
+    const specsObject =
+      typeof specifications === 'string' ? JSON.parse(specifications) : specifications;
 
     const product = new Product({
       title,
@@ -97,7 +90,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       priceRange,
       rating: parseFloat(rating),
       alt,
-      image: req.file ? req.file.path : ''
+      image: req.file ? req.file.path : '',
     });
 
     const newProduct = await product.save();
@@ -110,38 +103,30 @@ router.post('/', upload.single('image'), async (req, res) => {
 // UPDATE product
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      category,
-      features,
-      specifications,
-      priceRange,
-      rating,
-      alt
-    } = req.body;
+    const { title, description, category, features, specifications, priceRange, rating, alt } =
+      req.body;
 
     const updateData = {
       title,
       description,
       category,
       features: typeof features === 'string' ? JSON.parse(features) : features,
-      specifications: typeof specifications === 'string' ? JSON.parse(specifications) : specifications,
+      specifications:
+        typeof specifications === 'string' ? JSON.parse(specifications) : specifications,
       priceRange,
       rating: parseFloat(rating),
       alt,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
 
     if (req.file) {
       updateData.image = req.file.path;
     }
 
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    );
+    const product = await Product.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
@@ -159,7 +144,7 @@ router.delete('/:id', async (req, res) => {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
       { isActive: false, updatedAt: Date.now() },
-      { new: true }
+      { new: true },
     );
 
     if (!product) {

@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: solar-backend
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/uploads:/app/uploads   # persist uploads
+    restart: always
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: solar-frontend
+    ports:
+      - "5173:80"   # mapped host 5173 -> container port 80 (nginx)
+    env_file:
+      - ./Frontend/.env
+    depends_on:
+      - backend
+    restart: always

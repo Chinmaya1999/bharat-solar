@@ -8,7 +8,7 @@ const ImageSchema = new mongoose.Schema({
   size: { type: Number, required: true },
   uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   uploadedAt: { type: Date, default: Date.now },
-  isActive: { type: Boolean, default: true }
+  isActive: { type: Boolean, default: true },
 });
 
 module.exports = mongoose.model('Image', ImageSchema);

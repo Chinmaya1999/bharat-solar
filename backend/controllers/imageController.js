@@ -17,39 +17,39 @@ const uploadImage = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    
+
     const image = new Image({
       filename: req.file.filename,
       originalName: req.file.originalname,
       path: req.file.path,
       size: req.file.size,
-      uploadedBy: req.user.id
+      uploadedBy: req.user.id,
     });
-    
+
     await image.save();
-    res.status(201).json({ 
-      message: 'Image uploaded successfully', 
+    res.status(201).json({
+      message: 'Image uploaded successfully',
       image: {
         id: image._id,
         filename: image.filename,
         originalName: image.originalName,
         size: image.size,
-        uploadedAt: image.uploadedAt
-      }
+        uploadedAt: image.uploadedAt,
+      },
     });
   } catch (error) {
     console.error('Error uploading image:', error);
-    
+
     // Handle Multer errors
     if (error instanceof multer.MulterError) {
       if (error.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json({ 
-          error: 'File too large. Maximum size is 25MB.' 
+        return res.status(400).json({
+          error: 'File too large. Maximum size is 25MB.',
         });
       }
       return res.status(400).json({ error: error.message });
     }
-    
+
     res.status(500).json({ error: 'Failed to upload image' });
   }
 };
@@ -60,13 +60,13 @@ const deleteImage = async (req, res) => {
     if (!image) {
       return res.status(404).json({ error: 'Image not found' });
     }
-    
+
     // Delete file from filesystem
     fs.unlinkSync(image.path);
-    
+
     // Delete from database
     await Image.findByIdAndDelete(req.params.id);
-    
+
     res.json({ message: 'Image deleted successfully' });
   } catch (error) {
     console.error('Error deleting image:', error);

@@ -1,4 +1,3 @@
-// middleware/auth.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
@@ -20,12 +19,12 @@ const authenticateToken = async (req, res, next) => {
     
     req.user = user;
     next();
-  } catch (error) {
+  } catch {
     return res.status(403).json({ error: 'Invalid or expired token' });
   }
 };
 
-const requireAdmin = (req, res, next) => {
+           const requireAdmin = (req, res, next) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Admin access required' });
   }

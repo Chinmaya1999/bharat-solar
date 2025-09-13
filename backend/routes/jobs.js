@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
     type: req.body.type,
     description: req.body.description,
     requirements: req.body.requirements,
-    benefits: req.body.benefits
+    benefits: req.body.benefits,
   });
 
   try {

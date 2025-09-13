@@ -5,70 +5,72 @@ const productSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   category: {
     type: String,
     required: true,
-    enum: ['residential', 'commercial', 'industrial', 'specialized']
+    enum: ['residential', 'commercial', 'industrial', 'specialized'],
   },
-  features: [{
-    type: String,
-    required: true
-  }],
+  features: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   specifications: {
     power: {
       type: String,
-      required: true
+      required: true,
     },
     efficiency: {
       type: String,
-      required: true
+      required: true,
     },
     dimensions: {
       type: String,
-      required: true
+      required: true,
     },
     weight: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   priceRange: {
     type: String,
     enum: ['$', '$$', '$$$', '$$$$'],
-    required: true
+    required: true,
   },
   rating: {
     type: Number,
     min: 0,
     max: 5,
-    default: 0
+    default: 0,
   },
   image: {
     type: String,
-    required: true
+    required: true,
   },
   alt: {
     type: String,
-    required: true
+    required: true,
   },
   isActive: {
     type: Boolean,
-    default: true
+    default: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('Product', productSchema);

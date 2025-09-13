@@ -4,46 +4,54 @@ const gallerySchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
-    default: ''
+    default: '',
   },
   imageUrl: {
     type: String,
-    required: true
+    required: true,
   },
   category: {
     type: String,
     required: true,
-    enum: ['Residential', 'Commercial', 'Industrial', 'Installation Process', 'Before & After', 'Testimonials', 'Battery Systems']
+    enum: [
+      'Residential',
+      'Commercial',
+      'Industrial',
+      'Installation Process',
+      'Before & After',
+      'Testimonials',
+      'Battery Systems',
+    ],
   },
   location: {
     type: String,
-    required: true
+    required: true,
   },
   type: {
     type: String,
     enum: ['photo', 'video'],
-    default: 'photo'
+    default: 'photo',
   },
   isActive: {
     type: Boolean,
-    default: true
+    default: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // Update the updatedAt field before saving
-gallerySchema.pre('save', function(next) {
+gallerySchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
