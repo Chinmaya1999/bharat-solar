@@ -55,8 +55,8 @@ const SolarProductsPage = () => {
       setError(null);
 
       const url = selectedCategory === 'all'
-        ? 'https://api.bharatsolarsolution.com/api/products'
-        : `https://api.bharatsolarsolution.com/api/products?category=${selectedCategory}`;
+        ? 'http://localhost:3001/api/products'
+        : `http://localhost:3001/api/products?category=${selectedCategory}`;
 
       const response = await fetch(url);
 
@@ -193,7 +193,7 @@ const SolarProductsPage = () => {
                 <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300">
                   <div className="overflow-hidden">
                     <img
-                      src={`https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
+                      src={`http://localhost:3001/${product.image.replace(/\\/g, "/")}`}
                       alt={product.alt || product.title}
                       className="w-55 h-30 object-contain"
                     />

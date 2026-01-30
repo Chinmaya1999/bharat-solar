@@ -220,7 +220,7 @@ const AdminDashboard = () => {
   // Add gallery functions
   const fetchGalleryItems = async () => {
     try {
-      const response = await fetch('https://api.bharatsolarsolution.com/api/gallery');
+      const response = await fetch('http://localhost:3001/api/gallery');
       if (response.ok) {
         const data = await response.json();
         setGalleryItems(data.galleryItems || []);
@@ -252,8 +252,8 @@ const AdminDashboard = () => {
       formData.append('type', newGalleryItem.type);
 
       const endpoint = editingGalleryItem 
-        ? `https://api.bharatsolarsolution.com/api/gallery/${editingGalleryItem._id}`
-        : 'https://api.bharatsolarsolution.com/api/gallery';
+        ? `http://localhost:3001/api/gallery/${editingGalleryItem._id}`
+        : 'http://localhost:3001/api/gallery';
 
       const response = await fetch(endpoint, {
         method: editingGalleryItem ? 'PUT' : 'POST',
@@ -281,7 +281,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`https://api.bharatsolarsolution.com/api/gallery/${id}/hard`, {
+      const response = await fetch(`http://localhost:3001/api/gallery/${id}/hard`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -350,7 +350,7 @@ const AdminDashboard = () => {
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('https://api.bharatsolarsolution.com/api/jobs', {
+      const response = await fetch('http://localhost:3001/api/jobs', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -366,7 +366,7 @@ const AdminDashboard = () => {
   const fetchApplications = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('https://api.bharatsolarsolution.com/api/applications', {
+      const response = await fetch('http://localhost:3001/api/applications', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -383,8 +383,8 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const endpoint = editingJob 
-        ? `https://api.bharatsolarsolution.com/api/jobs/${editingJob._id}`
-        : 'https://api.bharatsolarsolution.com/api/jobs';
+        ? `http://localhost:3001/api/jobs/${editingJob._id}`
+        : 'http://localhost:3001/api/jobs';
       
       const method = editingJob ? 'PUT' : 'POST';
       
@@ -419,7 +419,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`https://api.bharatsolarsolution.com/api/jobs/${id}`, {
+      const response = await fetch(`http://localhost:3001/api/jobs/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -439,7 +439,7 @@ const AdminDashboard = () => {
   const updateApplicationStatus = async (applicationId, status) => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`https://api.bharatsolarsolution.com/api/applications/${applicationId}/status`, {
+      const response = await fetch(`http://localhost:3001/api/applications/${applicationId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -545,7 +545,7 @@ const AdminDashboard = () => {
   };
 
   const downloadResume = (resumePath) => {
-    window.open(`https://api.bharatsolarsolution.com/${resumePath}`, '_blank');
+    window.open(`http://localhost:3001/${resumePath}`, '_blank');
   };
 
   // Filter applications based on filters
@@ -580,7 +580,7 @@ const AdminDashboard = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://api.bharatsolarsolution.com/api/auth/login', {
+      const response = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -612,7 +612,7 @@ const AdminDashboard = () => {
   const fetchImages = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('https://api.bharatsolarsolution.com/api/images', {
+      const response = await fetch('http://localhost:3001/api/images', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -628,7 +628,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('https://api.bharatsolarsolution.com/api/users', {
+      const response = await fetch('http://localhost:3001/api/users', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -644,7 +644,7 @@ const AdminDashboard = () => {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('https://api.bharatsolarsolution.com/api/products', {
+      const response = await fetch('http://localhost:3001/api/products', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -670,7 +670,7 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append('image', selectedFile);
       
-      const response = await fetch('https://api.bharatsolarsolution.com/api/images/upload', {
+      const response = await fetch('http://localhost:3001/api/images/upload', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -697,7 +697,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`https://api.bharatsolarsolution.com/api/images/${id}`, {
+      const response = await fetch(`http://localhost:3001/api/images/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -735,8 +735,8 @@ const AdminDashboard = () => {
       formData.append('alt', newProduct.alt);
       
       const endpoint = editingProduct 
-        ? `https://api.bharatsolarsolution.com/api/products/${editingProduct._id}`
-        : 'https://api.bharatsolarsolution.com/api/products';
+        ? `http://localhost:3001/api/products/${editingProduct._id}`
+        : 'http://localhost:3001/api/products';
       
       const response = await fetch(endpoint, {
         method: editingProduct ? 'PUT' : 'POST',
@@ -764,7 +764,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`https://api.bharatsolarsolution.com/api/products/${id}`, {
+      const response = await fetch(`http://localhost:3001/api/products/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -946,7 +946,7 @@ const AdminDashboard = () => {
                       <TableRow key={image._id}>
                         <TableCell>
                           <img 
-                            src={`https://api.bharatsolarsolution.com/${image.path}`} 
+                            src={`http://localhost:3001/${image.path}`} 
                             alt={image.originalName} 
                             className="h-10 w-16 object-cover rounded"
                           />
@@ -1043,7 +1043,7 @@ const AdminDashboard = () => {
                           <TableRow key={product._id}>
                             <TableCell>
                               <img 
-                                src={`https://api.bharatsolarsolution.com/${product.image}`} 
+                                src={`http://localhost:3001/${product.image}`} 
                                 alt={product.alt} 
                                 className="h-10 w-16 object-cover rounded"
                                 onError={(e) => {
@@ -1683,7 +1683,7 @@ const AdminDashboard = () => {
                       <div className="relative aspect-video bg-gray-200">
                         {item.type === 'photo' ? (
                           <img 
-                            src={`https://api.bharatsolarsolution.com${item.imageUrl}`} 
+                            src={`http://localhost:3001${item.imageUrl}`} 
                             alt={item.title}
                             className="w-full h-full object-cover"
                           />
@@ -1839,66 +1839,490 @@ const AdminDashboard = () => {
     }
   };
 
-  if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 via-white to-blue-100 px-4">
-      <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 space-y-6">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Admin Login</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Please sign in to access your dashboard
+ if (!isLoggedIn) {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'radial-gradient(circle at 50% 50%, #0f172a, #1e293b)',
+      perspective: '1000px',
+      fontFamily: "'Poppins', sans-serif",
+      overflow: 'hidden'
+    }}>
+      
+      {/* 3D Background Elements */}
+      <div style={{
+        position: 'absolute',
+        width: '400px',
+        height: '400px',
+        background: 'linear-gradient(45deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15))',
+        borderRadius: '50%',
+        filter: 'blur(80px)',
+        top: '-150px',
+        right: '-150px',
+        transform: 'rotateZ(45deg)'
+      }} />
+      
+      <div style={{
+        position: 'absolute',
+        width: '300px',
+        height: '300px',
+        background: 'linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1))',
+        borderRadius: '50%',
+        filter: 'blur(60px)',
+        bottom: '-100px',
+        left: '-100px',
+        transform: 'rotateZ(-45deg)'
+      }} />
+
+      {/* Main 3D Card */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '440px',
+        background: 'rgba(15, 23, 42, 0.8)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '32px',
+        padding: '48px 40px',
+        boxShadow: `
+          0 0 0 1px rgba(255, 255, 255, 0.05),
+          0 25px 50px -12px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1)
+        `,
+        transformStyle: 'preserve-3d',
+        transform: 'rotateX(5deg) rotateY(0deg)',
+        transition: 'transform 0.5s ease, box-shadow 0.5s ease',
+        willChange: 'transform'
+      }} 
+      onMouseMove={(e) => {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateY = ((x - centerX) / centerX) * 5;
+        const rotateX = ((centerY - y) / centerY) * 5;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.boxShadow = `
+          0 0 0 1px rgba(255, 255, 255, 0.05),
+          ${rotateY * 2}px ${rotateX * 2}px 30px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1)
+        `;
+      }}
+      onMouseLeave={(e) => {
+        const card = e.currentTarget;
+        card.style.transform = 'perspective(1000px) rotateX(5deg) rotateY(0deg)';
+        card.style.boxShadow = `
+          0 0 0 1px rgba(255, 255, 255, 0.05),
+          0 25px 50px -12px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1)
+        `;
+      }}>
+        
+        {/* 3D Glowing Border */}
+        <div style={{
+          position: 'absolute',
+          top: '-2px',
+          left: '-2px',
+          right: '-2px',
+          bottom: '-2px',
+          background: 'linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4, #6366f1)',
+          backgroundSize: '400% 400%',
+          borderRadius: '34px',
+          zIndex: -1,
+          filter: 'blur(20px)',
+          opacity: '0.5',
+          animation: 'gradientShift 3s ease infinite'
+        }} />
+
+        {/* Header with 3D Text */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '40px',
+          transform: 'translateZ(20px)'
+        }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '72px',
+            height: '72px',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            borderRadius: '20px',
+            marginBottom: '24px',
+            boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)',
+            transform: 'translateZ(30px)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '-50%',
+              left: '-50%',
+              width: '200%',
+              height: '200%',
+              background: 'linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+              transform: 'rotate(45deg)',
+              animation: 'shine 3s infinite'
+            }} />
+            <svg style={{ width: '32px', height: '32px' }} fill="white" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          
+          <h1 style={{
+            fontSize: '32px',
+            fontWeight: '700',
+            background: 'linear-gradient(to right, #ffffff, #c7d2fe)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            marginBottom: '12px',
+            letterSpacing: '-0.5px',
+            textShadow: '0 2px 10px rgba(99, 102, 241, 0.3)'
+          }}>
+            Admin Portal
+          </h1>
+          
+          <p style={{
+            fontSize: '14px',
+            color: '#94a3b8',
+            lineHeight: '1.6'
+          }}>
+            Enter your credentials to access the control panel
           </p>
         </div>
-    
-        <form className="mt-6 space-y-5" onSubmit={login}>
-          <div className="space-y-4">
-            <Input
-              id="username"
-              name="username"
-              type="text"
-              required
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+
+        {/* Form with 3D Inputs */}
+        <form onSubmit={login} style={{ width: '100%' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '24px', transform: 'translateZ(15px)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '10px'
+              }}>
+                <div style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+                  boxShadow: '0 0 10px #6366f1'
+                }} />
+                <label style={{
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#e2e8f0',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px'
+                }}>
+                  Username
+                </label>
+              </div>
+              
+              <div style={{
+                position: 'relative',
+                background: 'rgba(30, 41, 59, 0.6)',
+                borderRadius: '16px',
+                border: '1px solid rgba(99, 102, 241, 0.2)',
+                overflow: 'hidden',
+                boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.2)'
+              }}>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter username"
+                  style={{
+                    width: '100%',
+                    padding: '20px 20px 20px 50px',
+                    fontSize: '15px',
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#ffffff',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <svg style={{
+                  position: 'absolute',
+                  left: '20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '20px',
+                  height: '20px'
+                }} fill="#94a3b8" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '32px', transform: 'translateZ(15px)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '10px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+                    boxShadow: '0 0 10px #6366f1'
+                  }} />
+                  <label style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#e2e8f0',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px'
+                  }}>
+                    Password
+                  </label>
+                </div>
+                
+                <a href="#" style={{
+                  fontSize: '13px',
+                  color: '#6366f1',
+                  textDecoration: 'none',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  textShadow: '0 0 20px rgba(99, 102, 241, 0.5)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateX(5px)';
+                  e.target.style.textShadow = '0 0 30px rgba(99, 102, 241, 0.8)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateX(0)';
+                  e.target.style.textShadow = '0 0 20px rgba(99, 102, 241, 0.5)';
+                }}>
+                  Forgot Password?
+                </a>
+              </div>
+              
+              <div style={{
+                position: 'relative',
+                background: 'rgba(30, 41, 59, 0.6)',
+                borderRadius: '16px',
+                border: '1px solid rgba(99, 102, 241, 0.2)',
+                overflow: 'hidden',
+                boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.2)'
+              }}>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  style={{
+                    width: '100%',
+                    padding: '20px 20px 20px 50px',
+                    fontSize: '15px',
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#ffffff',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    letterSpacing: '2px'
+                  }}
+                />
+                <svg style={{
+                  position: 'absolute',
+                  left: '20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '20px',
+                  height: '20px'
+                }} fill="#94a3b8" viewBox="0 0 24 24">
+                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '32px',
+              transform: 'translateZ(10px)'
+            }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                cursor: 'pointer',
+                userSelect: 'none'
+              }}>
+                <div style={{
+                  position: 'relative',
+                  width: '22px',
+                  height: '22px',
+                  background: 'rgba(30, 41, 59, 0.8)',
+                  borderRadius: '6px',
+                  border: '2px solid rgba(99, 102, 241, 0.5)',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%) scale(0)',
+                    width: '12px',
+                    height: '12px',
+                    background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+                    borderRadius: '3px',
+                    transition: 'transform 0.3s ease'
+                  }} />
+                </div>
+                <input
+                  type="checkbox"
+                  id="remember"
+                  style={{ display: 'none' }}
+                  onChange={(e) => {
+                    const check = e.target.nextElementSibling?.firstChild;
+                    if (check) {
+                      check.style.transform = e.target.checked 
+                        ? 'translate(-50%, -50%) scale(1)'
+                        : 'translate(-50%, -50%) scale(0)';
+                    }
+                  }}
+                />
+                <span style={{
+                  fontSize: '14px',
+                  color: '#cbd5e1',
+                  fontWeight: '500'
+                }}>
+                  Remember for 30 days
+                </span>
+              </label>
+            </div>
           </div>
-    
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-              />
-              Remember me
-            </label>
-            <a href="#" className="text-blue-600 hover:underline">
-              Forgot password?
-            </a>
-          </div>
-    
-          <Button
+
+          {/* 3D Animated Button */}
+          <button
             type="submit"
-            className="w-full py-3 text-sm font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-all duration-200"
+            style={{
+              position: 'relative',
+              width: '100%',
+              padding: '20px',
+              fontSize: '16px',
+              fontWeight: '600',
+              color: 'white',
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              border: 'none',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              overflow: 'hidden',
+              transform: 'translateZ(20px)',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateZ(20px) scale(1.05)';
+              e.target.style.boxShadow = '0 15px 40px rgba(99, 102, 241, 0.6)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateZ(20px) scale(1)';
+              e.target.style.boxShadow = '0 10px 30px rgba(99, 102, 241, 0.4)';
+            }}
+            onMouseDown={(e) => {
+              e.target.style.transform = 'translateZ(20px) scale(0.98)';
+            }}
           >
-            Sign In
-          </Button>
+            <div style={{
+              position: 'absolute',
+              top: '-50%',
+              left: '-50%',
+              width: '200%',
+              height: '200%',
+              background: 'linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+              transform: 'rotate(45deg)',
+              animation: 'shine 3s infinite'
+            }} />
+            <span style={{ position: 'relative', zIndex: 1 }}>
+              Sign In to Dashboard
+            </span>
+          </button>
         </form>
+
+        {/* Footer */}
+        <div style={{
+          textAlign: 'center',
+          marginTop: '32px',
+          paddingTop: '24px',
+          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+          transform: 'translateZ(10px)'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '24px',
+            marginBottom: '16px'
+          }}>
+            <div style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: '#10b981',
+              boxShadow: '0 0 10px #10b981',
+              position: 'relative'
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: '#10b981',
+                animation: 'pulse 2s infinite'
+              }} />
+            </div>
+            <span style={{
+              fontSize: '13px',
+              color: '#94a3b8',
+              fontWeight: '500'
+            }}>
+              Secure Connection • TLS 1.3 Encrypted
+            </span>
+          </div>
+        </div>
       </div>
+
+      {/* Add CSS animations */}
+      <style>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes shine {
+          0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+          100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 1; }
+          100% { transform: scale(3); opacity: 0; }
+        }
+      `}</style>
     </div>
-    
-    );
-  }
+  );
+}
 
   return (
     <div className="flex h-screen bg-gray-100">
