@@ -131,10 +131,10 @@ const SolarProductsPage = () => {
         initial="initial"
         animate="animate"
       >
-        <motion.h1 className="text-4xl md:text-5xl font-extrabold mb-4" variants={slideUp(0)}>
-          Premium <span className="gradient-text">Solar Products</span>
+        <motion.h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4" variants={slideUp(0)}>
+          Premium <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">Solar Products</span>
         </motion.h1>
-        <motion.p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto" variants={slideUp(0.2)}>
+        <motion.p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto" variants={slideUp(0.2)}>
           Discover our range of high-efficiency solar panels designed for residential, commercial, and industrial applications.
         </motion.p>
       </motion.section>
@@ -146,10 +146,12 @@ const SolarProductsPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold">Filter by Category:</h3>
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-6 bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-blue-600 to-orange-500 p-2.5 rounded-xl">
+              <Filter className="h-5 w-5 text-white" />
+            </div>
+            <h3 className="font-bold text-gray-900">Filter by Category:</h3>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -158,7 +160,11 @@ const SolarProductsPage = () => {
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category.id)}
-                className="rounded-full"
+                className={`rounded-full transition-all duration-300 ${
+                  selectedCategory === category.id 
+                    ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
+                    : 'border-2 border-gray-200 hover:border-blue-600 hover:text-blue-600'
+                }`}
               >
                 {category.name}
               </Button>
@@ -170,6 +176,11 @@ const SolarProductsPage = () => {
               variant={viewMode === 'grid' ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode('grid')}
+              className={`rounded-xl transition-all duration-300 ${
+                viewMode === 'grid' 
+                  ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
+                  : 'border-2 border-gray-200 hover:border-blue-600'
+              }`}
             >
               <Grid className="h-4 w-4" />
             </Button>
@@ -177,6 +188,11 @@ const SolarProductsPage = () => {
               variant={viewMode === 'list' ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode('list')}
+              className={`rounded-xl transition-all duration-300 ${
+                viewMode === 'list' 
+                  ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
+                  : 'border-2 border-gray-200 hover:border-blue-600'
+              }`}
             >
               <List className="h-4 w-4" />
             </Button>
@@ -207,54 +223,57 @@ const SolarProductsPage = () => {
               <motion.div
                 key={product._id || product.id}
                 variants={slideUp(index * 0.1)}
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -8 }}
                 className="h-full"
               >
-                <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300">
-                  <div className="overflow-hidden">
+                <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 border-0 rounded-3xl bg-white shadow-lg">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex justify-center group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:to-orange-50 transition-all duration-300">
                     <img
                       src={`https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                       alt={product.alt || product.title}
-                      className="w-55 h-30 object-contain"
+                      className="w-32 h-24 object-contain group-hover:scale-110 transition-transform duration-300"
                     />
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-600 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                      {product.category}
+                    </div>
                   </div>
-                  <CardHeader>
+                  <CardHeader className="pb-4">
                     <div className="flex justify-between items-start mb-2">
-                      <CardTitle className="text-xl">{product.title}</CardTitle>
-                      <div className="flex items-center bg-primary/10 px-2 py-1 rounded-full">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span className="text-sm font-medium">{product.rating}</span>
+                      <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">{product.title}</CardTitle>
+                      <div className="flex items-center bg-gradient-to-r from-yellow-400 to-orange-400 px-2.5 py-1 rounded-full shadow-md">
+                        <Star className="h-4 w-4 fill-white text-white mr-1" />
+                        <span className="text-sm font-bold text-white">{product.rating}</span>
                       </div>
                     </div>
-                    <CardDescription>{product.description}</CardDescription>
+                    <CardDescription className="text-gray-600 line-clamp-2">{product.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="mb-4">
-                      <h4 className="font-semibold mb-2">Key Features:</h4>
+                      <h4 className="font-bold mb-2 text-gray-900">Key Features:</h4>
                       <ul className="space-y-1">
                         {product.features.slice(0, 3).map((feature, i) => (
                           <li key={i} className="flex items-start">
                             <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm">{feature}</span>
+                            <span className="text-sm text-gray-600">{feature}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50 p-3 rounded-xl">
                       <div>
-                        <span className="font-medium">Power Output:</span>
-                        <p className="text-muted-foreground">{product.specifications?.power}</p>
+                        <span className="font-semibold text-gray-900">Power:</span>
+                        <p className="text-gray-600">{product.specifications?.power}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Efficiency:</span>
-                        <p className="text-muted-foreground">{product.specifications?.efficiency}</p>
+                        <span className="font-semibold text-gray-900">Efficiency:</span>
+                        <p className="text-gray-600">{product.specifications?.efficiency}</p>
                       </div>
                     </div>
                   </CardContent>
-                  <CardFooter className="flex justify-between">
+                  <CardFooter className="flex justify-between pt-4">
                     <Link to={`/quote-request?product=${product._id || product.id}`} className="w-full">
-                      <Button className="w-full bg-gradient-to-r from-primary to-yellow-400 hover:from-primary/90 hover:to-yellow-400/90 text-primary-foreground">
+                      <Button className="w-full bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                         Request Quote <ChevronRight className="ml-2 h-4 w-4" />
                       </Button>
                     </Link>
@@ -348,58 +367,58 @@ const SolarProductsPage = () => {
 
       {/* Benefits Section */}
       <motion.section
-        className="py-12 bg-muted/30 rounded-2xl mb-16"
+        className="py-16 bg-gradient-to-br from-blue-50 via-white to-orange-50 rounded-3xl mb-16 shadow-lg border border-gray-100"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.7 }}
       >
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold">Why Choose Our Solar Products?</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto mt-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">Why Choose Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">Solar Products?</span></h2>
+          <p className="text-gray-600 max-w-2xl mx-auto mt-4 text-lg">
             Our solar solutions are designed to deliver maximum efficiency, durability, and return on investment.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-8">
           <motion.div
-            className="text-center"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
+            className="text-center bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300"
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="h-8 w-8 text-primary" />
+            <div className="bg-gradient-to-r from-blue-600 to-orange-500 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl hover:scale-110 transition-transform duration-300">
+              <Shield className="h-10 w-10 text-white" />
             </div>
-            <h3 className="font-bold text-lg mb-2">25-Year Performance Warranty</h3>
-            <p className="text-muted-foreground">
+            <h3 className="font-bold text-xl mb-3 text-gray-900">25-Year Performance Warranty</h3>
+            <p className="text-gray-600 leading-relaxed">
               Industry-leading warranty that guarantees your panels will perform at 85% capacity or more after 25 years.
             </p>
           </motion.div>
 
           <motion.div
-            className="text-center"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
+            className="text-center bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300"
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Sun className="h-8 w-8 text-primary" />
+            <div className="bg-gradient-to-r from-blue-600 to-orange-500 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl hover:scale-110 transition-transform duration-300">
+              <Sun className="h-10 w-10 text-white" />
             </div>
-            <h3 className="font-bold text-lg mb-2">High Efficiency Rates</h3>
-            <p className="text-muted-foreground">
+            <h3 className="font-bold text-xl mb-3 text-gray-900">High Efficiency Rates</h3>
+            <p className="text-gray-600 leading-relaxed">
               Our panels convert more sunlight into electricity, maximizing energy production even in limited spaces.
             </p>
           </motion.div>
 
           <motion.div
-            className="text-center"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
+            className="text-center bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300"
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <BatteryCharging className="h-8 w-8 text-primary" />
+            <div className="bg-gradient-to-r from-blue-600 to-orange-500 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl hover:scale-110 transition-transform duration-300">
+              <BatteryCharging className="h-10 w-10 text-white" />
             </div>
-            <h3 className="font-bold text-lg mb-2">Durability & Reliability</h3>
-            <p className="text-muted-foreground">
+            <h3 className="font-bold text-xl mb-3 text-gray-900">Durability & Reliability</h3>
+            <p className="text-gray-600 leading-relaxed">
               Engineered to withstand extreme weather conditions, from hailstorms to high winds and heavy snow loads.
             </p>
           </motion.div>

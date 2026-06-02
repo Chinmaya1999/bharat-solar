@@ -236,19 +236,19 @@ const handleCategoryClick = (categoryName) => {
       
       <div className="overflow-x-hidden bg-gray-50">
       {/* ===== Category Scroller with Arrows ===== */}
-      <nav aria-label="Product categories" className="py-8 bg-white relative">
+      <nav aria-label="Product categories" className="py-8 bg-gradient-to-b from-white to-gray-50 relative border-b border-gray-100">
         <div className="container px-4 relative">
           {/* Left Arrow */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full z-10 hover:bg-gray-100"
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-lg p-3 rounded-full z-10 hover:bg-gradient-to-r hover:from-yellow-400 hover:to-orange-500 hover:text-white transition-all duration-300 hover:scale-110 hidden md:block"
           >
             <ChevronLeft className="w-6 h-6 text-gray-700" />
           </button>
 
           {/* Scrollable Categories */}
           <div ref={scrollRef} className="flex overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
-            <div className="flex space-x-6">
+            <div className="flex space-x-4 md:space-x-6">
               {categorySolutions.map((solution, index) => (
                 <motion.div
                   key={index}
@@ -256,17 +256,17 @@ const handleCategoryClick = (categoryName) => {
                   whileInView="visible"
                   variants={fadeIn}
                   viewport={{ once: true }}
-                  className="flex flex-col items-center min-w-[100px] flex-shrink-0"
+                  className="flex flex-col items-center min-w-[90px] md:min-w-[110px] flex-shrink-0 cursor-pointer group"
                   onClick={() => handleCategoryClick(solution.name)}
                 >
-                  <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2 p-3 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-2 p-3 shadow-md hover:shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-yellow-400 group-hover:to-orange-500">
                     <img
                       src={solution.icon}
                       alt={solution.name}
-                      className="w-8 h-8 object-contain"
+                      className="w-7 h-7 md:w-8 md:h-8 object-contain group-hover:filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
                     />
                   </div>
-                  <span className="text-sm font-medium text-center">
+                  <span className="text-xs md:text-sm font-semibold text-center text-gray-700 group-hover:text-orange-600 transition-colors">
                     {solution.name}
                   </span>
                 </motion.div>
@@ -277,7 +277,7 @@ const handleCategoryClick = (categoryName) => {
           {/* Right Arrow */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full z-10 hover:bg-gray-100"
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-lg p-3 rounded-full z-10 hover:bg-gradient-to-r hover:from-yellow-400 hover:to-orange-500 hover:text-white transition-all duration-300 hover:scale-110 hidden md:block"
           >
             <ChevronRight className="w-6 h-6 text-gray-700" />
           </button>
@@ -310,7 +310,7 @@ const handleCategoryClick = (categoryName) => {
       `}</style>
 
       {/* Hero Slider Section */}
-      <section aria-label="Hero slider showcasing solar installations" className="relative h-[400px] text-white overflow-hidden">
+      <section aria-label="Hero slider showcasing solar installations" className="relative h-[500px] md:h-[600px] text-white overflow-hidden">
         {/* Photo Slider */}
         <div className="absolute inset-0">
           <AnimatePresence mode="wait">
@@ -319,7 +319,7 @@ const handleCategoryClick = (categoryName) => {
                 key={currentSlide}
                 src={sliderImages[currentSlide]}
                 alt={`Solar installation ${currentSlide + 1}`}
-                className="w-full h-full object-cover brightness-[0.65] absolute inset-0"
+                className="w-full h-full object-cover brightness-[0.5] absolute inset-0"
                 initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
@@ -330,61 +330,76 @@ const handleCategoryClick = (categoryName) => {
         </div>
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r  via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
 
         {/* Content */}
         <div className="container h-full flex flex-col justify-center px-6 relative z-10">
-          {/* <motion.div
+          <motion.div
             initial="hidden"
             whileInView="visible"
             variants={staggerContainer}
             viewport={{ once: true }}
             className="max-w-3xl"
           >
+            <motion.h1 
+              variants={slideUp} 
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight"
+            >
+              Power Your Future with
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                Solar Energy
+              </span>
+            </motion.h1>
+            <motion.p 
+              variants={slideUp} 
+              className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl"
+            >
+              India's trusted solar installation partner. Save up to 90% on electricity bills with government subsidy schemes.
+            </motion.p>
             <motion.div variants={slideUp} className="flex flex-wrap gap-4">
-              <Link to="/quote">
-                <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8 py-6 text-lg shadow-lg rounded-xl transition">
-                  Get Free Consultation
+              <Link to="/contact">
+                <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-semibold px-8 py-4 text-lg shadow-2xl rounded-2xl transition-all duration-300 hover:scale-105">
+                  Get Free Quote
                 </Button>
               </Link>
-              <Link to="/schemes">
+              <Link to="/solar-products">
                 <Button
                   variant="outline"
-                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-medium rounded-xl transition"
+                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg font-medium rounded-2xl transition-all duration-300 backdrop-blur-sm"
                 >
-                  Check Subsidy Eligibility
+                  Explore Products
                 </Button>
               </Link>
             </motion.div>
-          </motion.div> */}
+          </motion.div>
         </div>
 
         {/* Controls */}
-        <div className="absolute inset-0 flex items-center justify-between px-4 z-20">
+        <div className="absolute inset-0 flex items-center justify-between px-4 md:px-8 z-20">
           <button
             onClick={prevSlide}
-            className="p-3 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition shadow-md"
+            className="p-3 md:p-4 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition-all duration-300 shadow-lg hover:scale-110"
           >
-            <ChevronLeft className="h-7 w-7 text-white" />
+            <ChevronLeft className="h-6 w-6 md:h-8 md:w-8 text-white" />
           </button>
           <button
             onClick={nextSlide}
-            className="p-3 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition shadow-md"
+            className="p-3 md:p-4 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition-all duration-300 shadow-lg hover:scale-110"
           >
-            <ChevronRight className="h-7 w-7 text-white" />
+            <ChevronRight className="h-6 w-6 md:h-8 md:w-8 text-white" />
           </button>
         </div>
 
         {/* Dots */}
         {sliderImages.length > 0 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
             {sliderImages.map((_, i) => (
               <button
                 key={i}
                 onClick={() => goToSlide(i)}
-                className={`w-4 h-4 rounded-full transition-all duration-300 ${
+                className={`w-3 h-3 md:w-4 md:h-4 rounded-full transition-all duration-300 ${
                   i === currentSlide
-                    ? "bg-yellow-400 scale-110 shadow-lg"
+                    ? "bg-gradient-to-r from-yellow-400 to-orange-500 scale-125 shadow-lg"
                     : "bg-white/40 hover:bg-white/60"
                 }`}
               />
@@ -394,7 +409,7 @@ const handleCategoryClick = (categoryName) => {
       </section>
 
       {/* Government Schemes Section */}
-      <section aria-label="Government solar subsidy schemes" className="py-12 bg-gradient-to-r from-blue-50 via-white to-blue-50">
+      <section aria-label="Government solar subsidy schemes" className="py-16 bg-gradient-to-br from-blue-50 via-white to-orange-50">
         <div className="container px-4">
           {/* Section Heading */}
           <motion.div
@@ -404,8 +419,8 @@ const handleCategoryClick = (categoryName) => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <motion.h2 variants={slideUp} className="text-3xl font-bold mb-4">
-              Government <span className="text-blue-600">Solar Schemes</span>
+            <motion.h2 variants={slideUp} className="text-3xl md:text-4xl font-extrabold mb-4">
+              Government <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">Solar Schemes</span>
             </motion.h2>
             <motion.p
               variants={slideUp}
@@ -416,7 +431,7 @@ const handleCategoryClick = (categoryName) => {
           </motion.div>
 
           {/* Scheme Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {governmentSchemes.map((scheme, index) => (
               <motion.div
                 key={index}
@@ -424,34 +439,36 @@ const handleCategoryClick = (categoryName) => {
                 whileInView="visible"
                 variants={slideUp}
                 viewport={{ once: true }}
+                whileHover={{ y: -8 }}
+                transition={{ duration: 0.3 }}
               >
-                <Card className="relative h-full rounded-2xl overflow-hidden border border-blue-100 shadow-md hover:shadow-2xl transition-all duration-300 bg-gradient-to-br from-white/80 via-blue-50/60 to-white/80 backdrop-blur-lg">
+                <Card className="relative h-full rounded-3xl overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
                   {/* Accent strip */}
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-teal-400 to-yellow-400"></div>
+                  <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 via-teal-400 to-orange-400"></div>
 
-                  <CardHeader>
-                    <div className="flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 mb-4 shadow-inner">
-                      <ShieldCheck className="h-7 w-7 text-blue-600" />
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 mb-4 shadow-lg">
+                      <ShieldCheck className="h-8 w-8 text-blue-600" />
                     </div>
-                    <CardTitle className="text-lg font-semibold text-gray-800">
+                    <CardTitle className="text-base md:text-lg font-bold text-gray-800 leading-snug">
                       {scheme.name}
                     </CardTitle>
                   </CardHeader>
 
-                  <CardContent>
-                    <CardDescription className="mb-4 text-gray-600">
+                  <CardContent className="pt-0">
+                    <CardDescription className="mb-4 text-gray-600 text-sm leading-relaxed">
                       {scheme.description}
                     </CardDescription>
 
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full shadow-sm">
+                    <div className="flex flex-col gap-3">
+                      <span className="text-xs md:text-sm font-bold bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-xl shadow-md text-center">
                         {scheme.subsidy}
                       </span>
                       <a
                         href={scheme.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm font-semibold text-blue-600 hover:underline"
+                        className="text-sm font-semibold text-blue-600 hover:text-orange-600 transition-colors text-center"
                       >
                         Learn More →
                       </a>
@@ -465,65 +482,67 @@ const handleCategoryClick = (categoryName) => {
       </section>
 
       {/* Featured Products Section */}
-    <section aria-label="Featured solar products" className="py-12 bg-gray-50">
+    <section aria-label="Featured solar products" className="py-16 bg-gradient-to-b from-gray-50 to-white">
   <div className="container mx-auto px-4">
     {/* Title */}
-    <div className="flex items-center justify-between mb-8">
+    <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-4">
       <motion.h2
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="text-3xl font-bold text-gray-900"
+        className="text-3xl md:text-4xl font-extrabold text-gray-900"
       >
-        Featured Solar Products
+        Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">Solar Products</span>
       </motion.h2>
-      <a
-        href="/solar-products"
-        className="text-blue-600 font-medium hover:underline text-sm"
+      <Link
+        to="/solar-products"
+        className="text-blue-600 font-semibold hover:text-orange-600 transition-colors text-sm md:text-base flex items-center gap-2 group"
       >
-        View All Products →
-      </a>
+        View All Products 
+        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+      </Link>
     </div>
 
     {/* Products Grid */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.length > 0 ? (
-        products.map((product, index) => (
+        products.slice(0, 8).map((product, index) => (
           <motion.div
             key={product._id}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -8 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
             viewport={{ once: true }}
-            className="bg-white rounded-2xl shadow hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col"
+            className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col border border-gray-100"
           >
             {/* Product Image */}
-            <div className="relative bg-gray-50 p-6 flex justify-center">
-              <span className="absolute top-3 left-3 bg-yellow-400 text-xs font-bold px-3 py-1 rounded-full text-gray-900">
+            <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex justify-center group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:to-orange-50 transition-all duration-300">
+              <span className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-xs font-bold px-3 py-1.5 rounded-full text-gray-900 shadow-md">
                 {product.category}
               </span>
               <img
                 src={`https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                 alt={product.alt || product.title}
-                className="w-55 h-30 object-contain"
+                className="w-32 h-24 object-contain group-hover:scale-110 transition-transform duration-300"
               />
             </div>
 
             {/* Product Info */}
             <div className="p-5 flex flex-col flex-grow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
                 {product.title}
               </h3>
-              <p className="text-sm text-teal-600 font-medium">
+              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                 {product.features?.[0] || product.description}
               </p>
 
               <div className="mt-auto">
-                <p className="text-xl font-bold text-blue-600">{product.priceRange}</p>
-                <Link to="/contact">
-                <button className="mt-3 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-                Contact Us
+                <p className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500 mb-3">{product.priceRange}</p>
+                <Link to="/contact" className="w-full">
+                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg">
+                  Contact Us
                 </button>
                 </Link>
               </div>
@@ -539,7 +558,7 @@ const handleCategoryClick = (categoryName) => {
 
 
       {/* Benefits Section */}
-      <section aria-label="Benefits of solar energy" className="py-16 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+      <section aria-label="Benefits of solar energy" className="py-20 bg-gradient-to-br from-white via-blue-50 to-orange-50 relative overflow-hidden">
         <div className="container px-4 relative z-10">
           {/* Heading */}
           <motion.div
@@ -547,13 +566,13 @@ const handleCategoryClick = (categoryName) => {
             whileInView="visible"
             variants={staggerContainer}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
             <motion.h2 
               variants={slideUp} 
-              className="text-3xl md:text-4xl font-extrabold mb-4 text-gray-900"
+              className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 text-gray-900"
             >
-              Why Choose <span className="bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent">Solar Energy?</span>
+              Why Choose <span className="bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">Solar Energy?</span>
             </motion.h2>
             <motion.p 
               variants={slideUp} 
@@ -609,17 +628,19 @@ const handleCategoryClick = (categoryName) => {
                 whileInView="visible"
                 variants={slideUp}
                 viewport={{ once: true }}
+                whileHover={{ y: -8 }}
+                transition={{ duration: 0.3 }}
               >
-                <Card className="h-full border-0 bg-white/80 backdrop-blur-xl shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl">
+                <Card className="h-full border-0 bg-white/90 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all duration-300 rounded-3xl overflow-hidden">
                   <CardContent className="p-8 flex flex-col items-center text-center">
                     {/* Icon */}
-                    <div className={`flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${benefit.gradient} shadow-md mb-4`}>
-                      <benefit.icon className="h-8 w-8 text-white" />
+                    <div className={`flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-r ${benefit.gradient} shadow-xl mb-6 hover:scale-110 transition-transform duration-300`}>
+                      <benefit.icon className="h-10 w-10 text-white" />
                     </div>
                     {/* Title */}
-                    <h3 className="text-xl font-bold mb-2 text-gray-900">{benefit.title}</h3>
+                    <h3 className="text-xl font-bold mb-3 text-gray-900">{benefit.title}</h3>
                     {/* Description */}
-                    <p className="text-gray-600">{benefit.description}</p>
+                    <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -628,12 +649,12 @@ const handleCategoryClick = (categoryName) => {
         </div>
 
         {/* Decorative Background Circles */}
-        <div className="absolute top-20 left-10 w-40 h-40 bg-teal-100 rounded-full blur-3xl opacity-40"></div>
-        <div className="absolute bottom-20 right-10 w-52 h-52 bg-blue-100 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute top-20 left-10 w-40 h-40 bg-blue-200 rounded-full blur-3xl opacity-30"></div>
+        <div className="absolute bottom-20 right-10 w-52 h-52 bg-orange-200 rounded-full blur-3xl opacity-30"></div>
       </section>
 
       {/* Process Section */}
-      <section aria-label="Solar installation process steps" className="py-16 bg-gradient-to-b from-blue-50 via-white to-blue-50">
+      <section aria-label="Solar installation process steps" className="py-20 bg-gradient-to-br from-white via-blue-50 to-orange-50">
         <div className="container px-6 mx-auto">
           {/* Heading */}
           <motion.div
@@ -641,17 +662,17 @@ const handleCategoryClick = (categoryName) => {
             whileInView="visible"
             variants={staggerContainer}
             viewport={{ once: true }}
-            className="text-center mb-14"
+            className="text-center mb-16"
           >
             <motion.h2
               variants={slideUp}
-              className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4"
+              className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4"
             >
-              Our Simple <span className="text-blue-600">4-Step Process</span>
+              Our Simple <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">4-Step Process</span>
             </motion.h2>
             <motion.p
               variants={slideUp}
-              className="text-gray-600 max-w-2xl mx-auto"
+              className="text-gray-600 max-w-2xl mx-auto text-lg"
             >
               From consultation to installation, we make going solar effortless.
             </motion.p>
@@ -660,7 +681,7 @@ const handleCategoryClick = (categoryName) => {
           {/* Steps */}
           <div className="relative">
             {/* Vertical line in center */}
-            <div className="hidden md:block absolute left-1/2 top-0 h-full w-1 bg-gradient-to-b from-blue-200 via-blue-100 to-transparent transform -translate-x-1/2" />
+            <div className="hidden md:block absolute left-1/2 top-0 h-full w-1.5 bg-gradient-to-b from-blue-400 via-orange-400 to-blue-400 transform -translate-x-1/2 rounded-full" />
 
             <div className="grid md:grid-cols-2 gap-12 md:gap-20">
               {[
@@ -695,6 +716,8 @@ const handleCategoryClick = (categoryName) => {
                   whileInView="visible"
                   variants={slideUp}
                   viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
                   className={`flex flex-col md:flex-row items-center ${
                     index % 2 === 0
                       ? "md:flex-row-reverse md:text-right"
@@ -707,7 +730,7 @@ const handleCategoryClick = (categoryName) => {
                       index % 2 === 0 ? "right-1/2 translate-x-6" : "left-1/2 -translate-x-6"
                     }`}
                   >
-                    <div className="w-5 h-5 rounded-full bg-blue-600 border-4 border-white shadow-md" />
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-600 to-orange-500 border-4 border-white shadow-xl" />
                   </div>
 
                   {/* Step Icon & Number */}
@@ -716,16 +739,16 @@ const handleCategoryClick = (categoryName) => {
                       index % 2 === 0 ? "md:items-end" : "md:items-start"
                     }`}
                   >
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full bg-blue-600 text-white shadow-lg mb-4 relative">
-                      <item.icon className="h-7 w-7" />
-                      <span className="absolute -top-3 -right-3 bg-white text-blue-600 font-bold rounded-full w-7 h-7 flex items-center justify-center shadow">
+                    <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-r from-blue-600 to-orange-500 text-white shadow-2xl mb-5 relative hover:scale-110 transition-transform duration-300">
+                      <item.icon className="h-9 w-9" />
+                      <span className="absolute -top-4 -right-4 bg-white text-blue-600 font-bold rounded-full w-8 h-8 flex items-center justify-center shadow-lg border-2 border-blue-600">
                         {item.step}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
                       {item.title}
                     </h3>
-                    <p className="text-gray-600 max-w-xs">{item.description}</p>
+                    <p className="text-gray-600 max-w-xs leading-relaxed">{item.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -735,11 +758,11 @@ const handleCategoryClick = (categoryName) => {
       </section>
 
       {/* CTA Section */}
-      <section aria-label="Call to action for solar consultation" className="relative py-20 bg-gradient-to-r from-blue-900 via-blue-800 to-teal-700 text-white overflow-hidden">
+      <section aria-label="Call to action for solar consultation" className="relative py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-orange-700 text-white overflow-hidden">
         {/* Decorative Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-          <div className="absolute inset-0 bg-gradient-to-t /30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
 
         <div className="relative container px-4 text-center">
@@ -752,7 +775,7 @@ const handleCategoryClick = (categoryName) => {
             {/* Stats Counter Row */}
             <motion.div
               variants={slideUp}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-16"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-16"
             >
               {[
                 { target: 2500, label: "Solar Installations" },
@@ -761,12 +784,12 @@ const handleCategoryClick = (categoryName) => {
               ].map((stat, i) => (
                 <div
                   key={i}
-                  className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:shadow-2xl transition"
+                  className="p-8 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl hover:shadow-3xl hover:bg-white/15 transition-all duration-300 hover:scale-105"
                 >
-                  <div className="text-5xl font-extrabold text-yellow-400 mb-2">
+                  <div className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400 mb-2">
                     <Counter target={stat.target} duration={3} />{i === 2 ? " MW" : "+"}
                   </div>
-                  <p className="text-blue-100 text-lg">{stat.label}</p>
+                  <p className="text-blue-100 text-lg font-medium">{stat.label}</p>
                 </div>
               ))}
             </motion.div>
@@ -774,13 +797,13 @@ const handleCategoryClick = (categoryName) => {
             {/* CTA Content */}
             <motion.h2
               variants={slideUp}
-              className="text-3xl md:text-4xl font-extrabold mb-6 leading-snug"
+              className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight"
             >
-              Power Your Future with <span className="text-yellow-400">Solar Energy</span>
+              Power Your Future with <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">Solar Energy</span>
             </motion.h2>
             <motion.p
               variants={slideUp}
-              className="text-lg md:text-xl mb-10 max-w-3xl mx-auto text-blue-100"
+              className="text-lg md:text-xl mb-10 max-w-3xl mx-auto text-blue-100 leading-relaxed"
             >
               Get a free consultation today and discover how much you can save while making the planet greener.
             </motion.p>
@@ -791,7 +814,7 @@ const handleCategoryClick = (categoryName) => {
               className="flex flex-wrap justify-center gap-6"
             >
               <Link to="/contact">
-                <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-10 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-yellow-400/50 transition-all duration-300">
+                <Button className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-gray-900 px-10 py-6 text-lg font-bold rounded-2xl shadow-2xl hover:shadow-yellow-400/50 transition-all duration-300 hover:scale-105">
                   Get Free Quote
                 </Button>
               </Link>

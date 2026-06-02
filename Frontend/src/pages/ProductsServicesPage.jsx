@@ -101,49 +101,56 @@ const ProductsServicesPage = () => {
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-20">
       <motion.section
         className="text-center"
         variants={fadeIn}
         initial="initial"
         animate="animate"
       >
-        <motion.h1 className="text-4xl md:text-5xl font-extrabold mb-4" variants={slideUp(0)}>
-          Our <span className="gradient-text">Products & Services</span>
+        <motion.h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4" variants={slideUp(0)}>
+          Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">Products & Services</span>
         </motion.h1>
-        <motion.p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto" variants={slideUp(0.2)}>
+        <motion.p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto" variants={slideUp(0.2)}>
           Discover our range of high-quality solar products and expert services designed to meet your energy needs.
         </motion.p>
       </motion.section>
 
       {/* Products Section */}
       <motion.section variants={fadeIn} initial="initial" whileInView="animate" viewport={{ once: true, amount: 0.1 }}>
-        <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">Our <span className="text-primary">Products</span></h2>
+        <h2 className="text-3xl md:text-4xl font-extrabold mb-10 text-center">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">Products</span></h2>
         <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
           {products.map((product, index) => (
-            <motion.div key={product.id} variants={slideUp(index * 0.1)}>
-              <Card className="h-full flex flex-col overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
-                <img  className="w-full h-56 object-cover" alt={product.alt} src="https://images.unsplash.com/photo-1671376354106-d8d21e55dddd" />
-                <CardHeader>
-                  <div className="flex items-center mb-2">
-                    <product.icon className="h-8 w-8 text-primary mr-3" />
-                    <CardTitle className="text-2xl">{product.title}</CardTitle>
+            <motion.div key={product.id} variants={slideUp(index * 0.1)} whileHover={{ y: -8 }} transition={{ duration: 0.3 }}>
+              <Card className="h-full flex flex-col overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 rounded-3xl bg-white shadow-lg">
+                <div className="relative overflow-hidden">
+                  <img  className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300" alt={product.alt} src="https://images.unsplash.com/photo-1671376354106-d8d21e55dddd" />
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-600 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                    Premium
                   </div>
-                  <CardDescription>{product.description}</CardDescription>
+                </div>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center mb-3">
+                    <div className="bg-gradient-to-r from-blue-600 to-orange-500 p-2.5 rounded-xl mr-3">
+                      <product.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-bold text-gray-900">{product.title}</CardTitle>
+                  </div>
+                  <CardDescription className="text-gray-600 leading-relaxed">{product.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <ul className="space-y-2 text-sm">
+                  <ul className="space-y-3 text-sm">
                     {product.details.map(detail => (
-                      <li key={detail.label} className="flex justify-between">
-                        <span className="font-medium text-foreground">{detail.label}:</span>
-                        <span className="text-muted-foreground text-right">{detail.value}</span>
+                      <li key={detail.label} className="flex justify-between bg-gray-50 p-3 rounded-xl">
+                        <span className="font-semibold text-gray-900">{detail.label}:</span>
+                        <span className="text-gray-600 text-right font-medium">{detail.value}</span>
                       </li>
                     ))}
                   </ul>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="pt-4">
                   <Link to={`/quote-request?product=${product.id}`} className="w-full">
-                    <Button className="w-full bg-gradient-to-r from-primary to-yellow-400 hover:from-primary/90 hover:to-yellow-400/90 text-primary-foreground">
+                    <Button className="w-full bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                       Request Quote <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -156,28 +163,40 @@ const ProductsServicesPage = () => {
 
       {/* Services Section */}
       <motion.section variants={fadeIn} initial="initial" whileInView="animate" viewport={{ once: true, amount: 0.1 }}>
-        <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">Our <span className="text-secondary">Services</span></h2>
+        <h2 className="text-3xl md:text-4xl font-extrabold mb-10 text-center">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-600">Services</span></h2>
         <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
           {services.map((service, index) => (
-            <motion.div key={service.id} variants={slideUp(index * 0.15)}>
-              <Card className="h-full flex flex-col overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
-                 <img  className="w-full h-56 object-cover" alt={service.alt} src="https://images.unsplash.com/photo-1675023112817-52b789fd2ef0" />
-                <CardHeader>
-                   <div className="flex items-center mb-2">
-                    <service.icon className="h-8 w-8 text-secondary mr-3" />
-                    <CardTitle className="text-2xl">{service.title}</CardTitle>
+            <motion.div key={service.id} variants={slideUp(index * 0.15)} whileHover={{ y: -8 }} transition={{ duration: 0.3 }}>
+              <Card className="h-full flex flex-col overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 rounded-3xl bg-white shadow-lg">
+                 <div className="relative overflow-hidden">
+                  <img  className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300" alt={service.alt} src="https://images.unsplash.com/photo-1675023112817-52b789fd2ef0" />
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                    Expert
                   </div>
-                  <CardDescription>{service.description}</CardDescription>
+                </div>
+                <CardHeader className="pb-4">
+                   <div className="flex items-center mb-3">
+                    <div className="bg-gradient-to-r from-orange-500 to-blue-600 p-2.5 rounded-xl mr-3">
+                      <service.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-bold text-gray-900">{service.title}</CardTitle>
+                  </div>
+                  <CardDescription className="text-gray-600 leading-relaxed">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <h4 className="font-semibold mb-2 text-foreground">Includes:</h4>
-                  <ul className="space-y-1 text-sm list-disc list-inside text-muted-foreground">
-                    {service.categories.map(cat => <li key={cat}>{cat}</li>)}
+                  <h4 className="font-bold mb-3 text-gray-900">Includes:</h4>
+                  <ul className="space-y-2 text-sm">
+                    {service.categories.map(cat => (
+                      <li key={cat} className="flex items-center text-gray-600">
+                        <div className="w-2 h-2 bg-gradient-to-r from-orange-500 to-blue-600 rounded-full mr-3" />
+                        {cat}
+                      </li>
+                    ))}
                   </ul>
                 </CardContent>
-                 <CardFooter>
+                 <CardFooter className="pt-4">
                   <Link to="/contact" className="w-full">
-                    <Button variant="outline" className="w-full border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground">
+                    <Button variant="outline" className="w-full border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white font-semibold rounded-xl transition-all duration-300">
                       Inquire About Services <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>

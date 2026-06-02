@@ -134,7 +134,7 @@ const Header = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-          isScrolled || celebrationBanners.length > 0 ? 'bg-white shadow-lg py-2' : 'bg-white/90 py-4'
+          isScrolled || celebrationBanners.length > 0 ? 'bg-white/95 backdrop-blur-lg shadow-xl py-3' : 'bg-white/90 backdrop-blur-md py-4'
         }`}
         style={{ top: celebrationBanners.length > 0 ? 'auto' : 0 }}
       >
@@ -143,50 +143,50 @@ const Header = () => {
             {/* Logo Section */}
             <Link to="/" className="flex items-center gap-3 group">
               <div className="relative">
-                <img 
-                  src={logo} 
-                  alt="Bharat Solar Solution Logo - Solar Installation Company in India" 
+                  <img 
+                    src={logo} 
+                    alt="Bharat Solar Solution Logo - Solar Installation Company in India" 
                   className={`h-12 w-12 object-contain transition-transform duration-300 group-hover:rotate-12 ${
                     isScrolled ? 'h-10 w-10' : 'h-12 w-12'
-                  }`}
-                />
-              </div>
+                    }`}
+                  />
+                </div>
               
               {/* Animated Text Section */}
               <div className="flex flex-col">
                 <motion.span 
-                  className={`font-bold tracking-tight whitespace-nowrap ${
-                    isScrolled ? 'text-2xl' : 'text-2xl'
+                  className={`font-extrabold tracking-tight whitespace-nowrap ${
+                    isScrolled ? 'text-xl' : 'text-2xl'
                   }`}
                 >
-                  <span className="bg-gradient-to-r from-orange-600 via-amber-300 to-green-600 bg-clip-text text-transparent drop-shadow-sm">
-                    BHARAT SOLAR SOLUTION
+                  <span className="bg-gradient-to-r from-blue-600 via-orange-500 to-yellow-400 bg-clip-text text-transparent">
+                    BHARAT SOLAR
                   </span>
+                </motion.span>
+                <motion.span 
+                  className={`font-semibold tracking-wide whitespace-nowrap text-gray-600 ${
+                    isScrolled ? 'text-xs' : 'text-sm'
+                  }`}
+                >
+                  SOLUTION
                 </motion.span>
               </div>
             </Link>
 
             {/* Desktop Navigation + Search */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-2">
               <nav className="flex items-center space-x-1">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.name}
                     to={link.path}
-                    className={`relative px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    className={`relative px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
                       location.pathname === link.path 
-                        ? 'text-blue-600' 
-                        : 'text-gray-700 hover:text-blue-600'
+                        ? 'bg-gradient-to-r from-blue-600 to-orange-500 text-white shadow-lg' 
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
                     }`}
                   >
                     {link.name}
-                    {location.pathname === link.path && (
-                      <motion.span 
-                        layoutId="nav-underline"
-                        className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-600"
-                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                      />
-                    )}
                   </Link>
                 ))}
               </nav>
@@ -198,7 +198,7 @@ const Header = () => {
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-48 rounded-full border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="pl-10 pr-4 py-2.5 w-48 rounded-xl border-2 border-gray-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all bg-gray-50"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
               </form>
@@ -210,7 +210,7 @@ const Header = () => {
                 variant="ghost" 
                 size="icon" 
                 onClick={toggleMobileMenu}
-                className="text-gray-700 hover:bg-gray-100 rounded-full"
+                className="text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-orange-50 rounded-xl transition-all duration-300"
               >
                 {isMobileMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -231,16 +231,16 @@ const Header = () => {
                 transition={{ duration: 0.3 }}
                 className="lg:hidden overflow-hidden"
               >
-                <nav className="flex flex-col space-y-2 py-4">
+                <nav className="flex flex-col space-y-2 py-6">
                   {navLinks.map((link) => (
                     <Link
                       key={link.name}
                       to={link.path}
                       onClick={toggleMobileMenu}
-                      className={`px-4 py-3 text-base font-medium rounded-lg ${
+                      className={`px-4 py-3 text-base font-semibold rounded-xl transition-all duration-300 ${
                         location.pathname === link.path 
-                          ? 'bg-blue-50 text-blue-600' 
-                          : 'text-gray-700 hover:bg-gray-50'
+                          ? 'bg-gradient-to-r from-blue-600 to-orange-500 text-white shadow-lg' 
+                          : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-orange-50'
                       }`}
                     >
                       {link.name}
@@ -254,7 +254,7 @@ const Header = () => {
                       placeholder="Search..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 pr-4 py-2 w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="pl-10 pr-4 py-3 w-full rounded-xl border-2 border-gray-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all bg-gray-50"
                     />
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
                   </form>
