@@ -25,10 +25,54 @@ const ContactUsPage = () => {
   const [formData, setFormData] = React.useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [mapInitialized, setMapInitialized] = React.useState(false);
+  const [currentLocation, setCurrentLocation] = React.useState(null);
+  const [locationLoading, setLocationLoading] = React.useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const getCurrentLocation = async () => {
+    setLocationLoading(true);
+    
+    try {
+      // Use exact coordinates from Google Maps link
+      const coordinates = [20.225101, 85.722536];
+      
+      setCurrentLocation({ latitude: coordinates[0], longitude: coordinates[1] });
+      setLocationLoading(false);
+      toast({
+        title: "Office Location",
+        description: "Bharat Solar Solution, Uttarmundamuhan, Odisha 752054"
+      });
+      
+      // Update map if already initialized
+      if (window.L && window.mapInstance) {
+        window.mapInstance.setView(coordinates, 16);
+        // Remove old marker and add new one
+        if (window.markerInstance) {
+          window.mapInstance.removeLayer(window.markerInstance);
+        }
+        const customIcon = window.L.icon({
+          iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        });
+        window.markerInstance = window.L.marker(coordinates, {icon: customIcon})
+          .addTo(window.mapInstance)
+          .bindPopup('Bharat Solar Solution<br>Uttarmundamuhan, Odisha 752054')
+          .openPopup();
+      }
+    } catch (error) {
+      setLocationLoading(false);
+      toast({
+        title: "Error",
+        description: "Unable to fetch office location",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -71,11 +115,15 @@ const ContactUsPage = () => {
           leafletJS.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
           leafletJS.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
           leafletJS.crossOrigin = '';
-          leafletJS.onload = () => {
+          leafletJS.onload = async () => {
             const L = window.L;
             if (L) {
-              // Create the map centered on Khandagiri, Bhubaneswar
-              const map = L.map('map-container').setView([20.265589, 85.784694], 16);
+              // Use exact coordinates from Google Maps link
+              const coordinates = [20.225101, 85.722536];
+              
+              // Create the map centered on the address
+              const map = L.map('map-container').setView(coordinates, 16);
+              window.mapInstance = map;
               
               // Add OpenStreetMap tiles
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -91,10 +139,11 @@ const ContactUsPage = () => {
               });
               
               // Add marker with popup
-              L.marker([20.265589, 85.784694], {icon: customIcon})
+              const marker = L.marker(coordinates, {icon: customIcon})
                 .addTo(map)
-                .bindPopup('Bharat Solar Solution<br>Khandagiri, Bhubaneswar')
+                .bindPopup('Bharat Solar Solution<br>Uttarmundamuhan, Odisha 752054')
                 .openPopup();
+              window.markerInstance = marker;
               
               setMapInitialized(true);
             }
@@ -178,7 +227,7 @@ const ContactUsPage = () => {
                 <div>
                   <h3 className="font-semibold text-foreground">Address:</h3>
                   <p className="text-muted-foreground">
-                    7Q39+8X9, Shreekhetra Vihar, Khandagiri, Bhubaneswar, Shankarpur, Odisha 751019
+                    Uttarmundamuhan, Odisha 752054
                   </p>
                 </div>
               </div>
@@ -229,10 +278,12 @@ const ContactUsPage = () => {
                   </div>
                 )}
               </div>
-              <div className="mt-4 text-sm text-muted-foreground flex items-center">
-                <MapPin className="h-4 w-4 mr-1 text-emerald-600" />
-                <span>Bharat Solar Solution, Khandagiri, Bhubaneswar</span>
-              </div>
+             
+              {currentLocation && (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Office Address: Uttarmundamuhan, Odisha 752054
+                </div>
+              )}
             </CardContent>
           </Card>
 

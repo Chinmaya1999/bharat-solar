@@ -264,7 +264,7 @@ const handleCategoryClick = (categoryName) => {
         </div>
       </section>
 
-      <style jsx>{`
+      <style>{`
         .animate-scroll-slow {
           animation: scroll 30s linear infinite;
           width: max-content;
