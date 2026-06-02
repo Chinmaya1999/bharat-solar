@@ -23,7 +23,7 @@ const Career = () => {
     const fetchJobs = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3001/api/jobs');
+        const response = await fetch('https://api.bharatsolarsolution.com/api/jobs');
         
         if (!response.ok) {
           throw new Error('Failed to fetch jobs');
@@ -126,7 +126,7 @@ const Career = () => {
     submitData.append('resume', formData.resume);
 
     try {
-      const response = await fetch('http://localhost:3001/api/applications', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/applications', {
         method: 'POST',
         body: submitData
       });

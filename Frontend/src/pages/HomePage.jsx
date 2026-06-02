@@ -35,7 +35,7 @@ const HomePage = () => {
   
 
   useEffect(() => {
-  fetch("http://localhost:3001/api/products")
+  fetch("https://api.bharatsolarsolution.com/api/products")
     .then((res) => res.json())
     .then((data) => setProducts(data.products || []))
     .catch((err) => console.error("Error fetching products:", err));
@@ -44,10 +44,10 @@ const HomePage = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/images');
+        const response = await fetch('https://api.bharatsolarsolution.com/api/images');
         if (response.ok) {
           const data = await response.json();
-          setSliderImages(data.map(img => `http://localhost:3001/${img.path}`));
+          setSliderImages(data.map(img => `https://api.bharatsolarsolution.com/${img.path}`));
         } else {
           // Fallback to default images if API fails
           setSliderImages([
@@ -484,7 +484,7 @@ const handleCategoryClick = (categoryName) => {
                 {product.category}
               </span>
               <img
-                src={`http://localhost:3001/${product.image.replace(/\\/g, "/")}`}
+                src={`https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                 alt={product.alt || product.title}
                 className="w-55 h-30 object-contain"
               />

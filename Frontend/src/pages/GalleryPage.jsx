@@ -26,7 +26,7 @@ const GalleryPage = () => {
   const fetchGalleryItems = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/api/gallery');
+      const response = await fetch('https://api.bharatsolarsolution.com/api/gallery');
       
       if (!response.ok) {
         throw new Error('Failed to fetch gallery items');
@@ -129,7 +129,7 @@ const GalleryPage = () => {
                 <img  
                   className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                   alt={project.alt || project.title}
-                  src={`http://localhost:3001/uploads/${project.imageUrl.split('/').pop()}`}
+                  src={`https://api.bharatsolarsolution.com/uploads/${project.imageUrl.split('/').pop()}`}
                  
                 />
                 <div className="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full">

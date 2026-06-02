@@ -220,7 +220,7 @@ const AdminDashboard = () => {
   // Add gallery functions
   const fetchGalleryItems = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/gallery');
+      const response = await fetch('https://api.bharatsolarsolution.com/api/gallery');
       if (response.ok) {
         const data = await response.json();
         setGalleryItems(data.galleryItems || []);
@@ -252,8 +252,8 @@ const AdminDashboard = () => {
       formData.append('type', newGalleryItem.type);
 
       const endpoint = editingGalleryItem 
-        ? `http://localhost:3001/api/gallery/${editingGalleryItem._id}`
-        : 'http://localhost:3001/api/gallery';
+        ? `https://api.bharatsolarsolution.com/api/gallery/${editingGalleryItem._id}`
+        : 'https://api.bharatsolarsolution.com/api/gallery';
 
       const response = await fetch(endpoint, {
         method: editingGalleryItem ? 'PUT' : 'POST',
@@ -281,7 +281,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:3001/api/gallery/${id}/hard`, {
+      const response = await fetch(`https://api.bharatsolarsolution.com/api/gallery/${id}/hard`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -350,7 +350,7 @@ const AdminDashboard = () => {
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/jobs', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/jobs', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -366,7 +366,7 @@ const AdminDashboard = () => {
   const fetchApplications = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/applications', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/applications', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -383,8 +383,8 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const endpoint = editingJob 
-        ? `http://localhost:3001/api/jobs/${editingJob._id}`
-        : 'http://localhost:3001/api/jobs';
+        ? `https://api.bharatsolarsolution.com/api/jobs/${editingJob._id}`
+        : 'https://api.bharatsolarsolution.com/api/jobs';
       
       const method = editingJob ? 'PUT' : 'POST';
       
@@ -419,7 +419,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:3001/api/jobs/${id}`, {
+      const response = await fetch(`https://api.bharatsolarsolution.com/api/jobs/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -439,7 +439,7 @@ const AdminDashboard = () => {
   const updateApplicationStatus = async (applicationId, status) => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:3001/api/applications/${applicationId}/status`, {
+      const response = await fetch(`https://api.bharatsolarsolution.com/api/applications/${applicationId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -545,7 +545,7 @@ const AdminDashboard = () => {
   };
 
   const downloadResume = (resumePath) => {
-    window.open(`http://localhost:3001/${resumePath}`, '_blank');
+    window.open(`https://api.bharatsolarsolution.com/${resumePath}`, '_blank');
   };
 
   // Filter applications based on filters
@@ -580,7 +580,7 @@ const AdminDashboard = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -612,7 +612,7 @@ const AdminDashboard = () => {
   const fetchImages = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/images', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/images', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -628,7 +628,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/users', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/users', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -644,7 +644,7 @@ const AdminDashboard = () => {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/products', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/products', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -670,7 +670,7 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append('image', selectedFile);
       
-      const response = await fetch('http://localhost:3001/api/images/upload', {
+      const response = await fetch('https://api.bharatsolarsolution.com/api/images/upload', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -697,7 +697,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:3001/api/images/${id}`, {
+      const response = await fetch(`https://api.bharatsolarsolution.com/api/images/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -735,8 +735,8 @@ const AdminDashboard = () => {
       formData.append('alt', newProduct.alt);
       
       const endpoint = editingProduct 
-        ? `http://localhost:3001/api/products/${editingProduct._id}`
-        : 'http://localhost:3001/api/products';
+        ? `https://api.bharatsolarsolution.com/api/products/${editingProduct._id}`
+        : 'https://api.bharatsolarsolution.com/api/products';
       
       const response = await fetch(endpoint, {
         method: editingProduct ? 'PUT' : 'POST',
@@ -764,7 +764,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:3001/api/products/${id}`, {
+      const response = await fetch(`https://api.bharatsolarsolution.com/api/products/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -946,7 +946,7 @@ const AdminDashboard = () => {
                       <TableRow key={image._id}>
                         <TableCell>
                           <img 
-                            src={`http://localhost:3001/${image.path}`} 
+                            src={`https://api.bharatsolarsolution.com/${image.path}`} 
                             alt={image.originalName} 
                             className="h-10 w-16 object-cover rounded"
                           />
@@ -1043,7 +1043,7 @@ const AdminDashboard = () => {
                           <TableRow key={product._id}>
                             <TableCell>
                               <img 
-                                src={`http://localhost:3001/${product.image}`} 
+                                src={`https://api.bharatsolarsolution.com/${product.image}`} 
                                 alt={product.alt} 
                                 className="h-10 w-16 object-cover rounded"
                                 onError={(e) => {
@@ -1683,7 +1683,7 @@ const AdminDashboard = () => {
                       <div className="relative aspect-video bg-gray-200">
                         {item.type === 'photo' ? (
                           <img 
-                            src={`http://localhost:3001${item.imageUrl}`} 
+                            src={`https://api.bharatsolarsolution.com${item.imageUrl}`} 
                             alt={item.title}
                             className="w-full h-full object-cover"
                           />

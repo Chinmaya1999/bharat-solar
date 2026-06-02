@@ -201,7 +201,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 		  '/api': {
-			target: 'http://localhost:3000', // Next.js server
+			target: 'https://api.bharatsolarsolution.com', // Next.js server
 			changeOrigin: true,
 			rewrite: (path) => path.replace(/^\/api/, ''),
 		  },

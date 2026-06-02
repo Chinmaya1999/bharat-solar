@@ -35,7 +35,7 @@ const Header = () => {
   // useEffect(() => {
   //   const fetchBanners = async () => {
   //     try {
-  //       const response = await fetch('http://localhost:3001:3001/api/celebrationBanners/active');
+  //       const response = await fetch('https://api.bharatsolarsolution.com:3001/api/celebrationBanners/active');
   //       if (response.ok) {
   //         const data = await response.json();
   //         setCelebrationBanners(data);
@@ -99,7 +99,7 @@ const Header = () => {
               {/* <Link to={celebrationBanners[currentBannerIndex].link || '#'}>
                 <motion.img
                   key={celebrationBanners[currentBannerIndex]._id}
-                  src={`http://localhost:3001:3001/${celebrationBanners[currentBannerIndex].path}`}
+                  src={`https://api.bharatsolarsolution.com:3001/${celebrationBanners[currentBannerIndex].path}`}
                   alt={celebrationBanners[currentBannerIndex].title}
                   className="w-full h-16 object-contain mx-auto"
                   initial={{ opacity: 0 }}
