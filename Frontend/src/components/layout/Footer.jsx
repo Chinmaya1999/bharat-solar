@@ -64,7 +64,7 @@ const Footer = () => {
               </a>
             </div>
             <p className="text-xs text-muted-foreground" style={{ color: "white" }}>
-              Email: info@bharatsolar.com
+              Email: saiadityabehera@bharatsolar.com
             </p>
           </div>
         </div>
