@@ -13,6 +13,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # ========== DEBUG: LIST ALL DIRECTORIES ==========
+      - name: List all directories
+        run: |
+          echo "=== All directories in repository ==="
+          ls -la
+          echo "=== Finding Dockerfiles ==="
+          find . -name "Dockerfile"
+          echo "=== Finding frontend related directories ==="
+          find . -type d -iname "*frontend*" -o -type d -iname "*client*" -o -type d -iname "*ui*"
+
       # ========== BACKEND DEPLOYMENT ==========
       - name: Verify Backend Files
         run: |
@@ -40,20 +50,43 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }}
 
       # ========== FRONTEND DEPLOYMENT ==========
+      # Use the ACTUAL directory name (check from debug output)
       - name: Verify Frontend Files
         run: |
           echo "=== Frontend Files ==="
-          ls -la frontend/
-          find . -name "Dockerfile" | grep frontend
+          # Try different possible names - use the one that works
+          if [ -d "Frontend" ]; then
+            ls -la Frontend/
+            find . -name "Dockerfile" | grep -i frontend
+          elif [ -d "frontend" ]; then
+            ls -la frontend/
+            find . -name "Dockerfile" | grep frontend
+          elif [ -d "client" ]; then
+            ls -la client/
+            find . -name "Dockerfile" | grep client
+          else
+            echo "No frontend directory found!"
+            exit 1
+          fi
 
       - name: Build Frontend Docker Image
         run: |
+          # Use the correct directory name (adjust based on your structure)
+          # Option 1: If directory is "Frontend" (capital F)
           docker build \
-            -f frontend/Dockerfile \
+            -f Frontend/Dockerfile \
             --build-arg VITE_API_URL=https://api.bharatsolarsolution.com \
             -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest \
             -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
-            frontend
+            Frontend
+          
+          # Option 2: If directory is "frontend" (lowercase f)
+          # docker build \
+          #   -f frontend/Dockerfile \
+          #   --build-arg VITE_API_URL=https://api.bharatsolarsolution.com \
+          #   -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest \
+          #   -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
+          #   frontend
 
       - name: Push Frontend Docker Image
         run: |
@@ -66,7 +99,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.EC2_SSK_KEY }}
           script: |
             # ===== BACKEND DEPLOYMENT =====
             echo "=== Deploying Backend ==="
@@ -100,7 +133,7 @@ jobs:
             # Pull the latest frontend image
             docker pull ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
             
-            # Run new frontend container (usually on port 80 or 5173)
+            # Run new frontend container
             docker run -d \
               --name mern-frontend \
               -p 80:80 \
