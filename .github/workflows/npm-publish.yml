@@ -30,11 +30,13 @@ jobs:
           docker build \
             -f backend/Dockerfile \
             -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest \
+            -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} \
             backend
 
       - name: Push Docker Image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }}
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -43,15 +45,28 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # Stop and remove existing container
             docker stop mern-backend || true
             docker rm mern-backend || true
-
+            
+            # Pull the latest image
             docker pull ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
-
+            
+            # Run new container with all environment variables
             docker run -d \
               --name mern-backend \
-              -p 5000:5000 \
+              -p 3001:3001 \
               --restart unless-stopped \
+              -e GMAIL_USER="${{ secrets.GMAIL_USER }}" \
+              -e GMAIL_APP_PASSWORD="${{ secrets.GMAIL_APP_PASSWORD }}" \
+              -e MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e live_api_uri="http://localhost:3001" \
               ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
-
+            
+            # Clean up old images
             docker image prune -f
+            
+            # Verify container is running
+            docker ps | grep mern-backend
+            docker logs --tail 20 mern-backend
