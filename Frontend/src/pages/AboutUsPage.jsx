@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Building, Target, Users, MapPin } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Helmet } from 'react-helmet';
 import ceo from './solor/WhatsApp Image 2025-05-25 at 1.48.18 PM.jpeg';
 import md from './solor/WhatsApp Image 2025-05-25 at 1.49.08 PM.jpeg';
 import cto from './solor/image.jpg';
@@ -104,7 +105,26 @@ const AboutUsPage = () => {
   }, [mapInitialized]);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-16">
+    <>
+      <Helmet>
+        <title>About Us - Bharat Solar Solution | Leading Solar Installation Company in Odisha</title>
+        <meta name="description" content="Learn about Bharat Solar Solution, Odisha's leading solar installation company since 2015. With 2,500+ installations, we provide expert solar solutions for homes and businesses across all districts in Odisha." />
+        <meta name="keywords" content="about Bharat Solar Solution, solar company Odisha, solar installation history, solar team, solar mission vision, solar service area Odisha, Bhubaneswar solar company" />
+        <link rel="canonical" href="https://bharatsolarsolution.com/about" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="About Us - Bharat Solar Solution" />
+        <meta property="og:description" content="Learn about Bharat Solar Solution, Odisha's leading solar installation company since 2015. With 2,500+ installations across all districts." />
+        <meta property="og:url" content="https://bharatsolarsolution.com/about" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:title" content="About Us - Bharat Solar Solution" />
+        <meta name="twitter:description" content="Learn about Bharat Solar Solution, Odisha's leading solar installation company since 2015. With 2,500+ installations across all districts." />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-16">
       <motion.section
         className="text-center"
         variants={fadeIn}
@@ -319,6 +339,7 @@ const AboutUsPage = () => {
         </div>
       </motion.section>
     </div>
+    </>
   );
 };
 

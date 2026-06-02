@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ChevronLeft, ChevronRight, Star, Zap, Sun, Battery, Home, HardHat, Clock, ShieldCheck, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const HomePage = () => {
   const [sliderImages, setSliderImages] = useState([]);
@@ -198,7 +199,7 @@ const HomePage = () => {
     { name: "Solar Water Pumps", icon: "https://cdn.iconscout.com/icon/premium/png-256-thumb/solar-water-pump-8597408-6953266.png" },
     { name: "Solar Street Lights", icon: "https://cdn-icons-png.flaticon.com/256/9064/9064997.png" },
     { name: "Solar Inverters", icon: "https://cdn-icons-png.flaticon.com/512/8772/8772530.png" },
-    { name: "Solar Batteries", icon: "https://www.svgrepo.com/show/35696/battery-charging-with-solar-panel.svg" },
+    { name: "Solar Batteries", icon: "https://cdn-icons-png.flaticon.com/512/3062/3062634.png" },
     { name: "Solar Panels", icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbivzlusXX2F0OSizqugOLOhNaRRskkRmudw&s" },
     { name: "Solar Heaters", icon: "https://png.pngtree.com/png-vector/20220720/ourmid/pngtree-industrial-solar-water-heater-color-icon-png-image_5353988.png" },
     { name: "EV Charging", icon: "https://www.svgrepo.com/show/308243/electric-car-charging-station-renewable-energy.svg" },
@@ -214,9 +215,28 @@ const handleCategoryClick = (categoryName) => {
   };
 
   return (
-    <div className="overflow-x-hidden bg-gray-50">
+    <>
+      <Helmet>
+        <title>Bharat Solar Solution - Best Solar Installation Service Provider in India | Solar Panels, Inverters & Batteries</title>
+        <meta name="description" content="Bharat Solar Solution is India's leading solar installation service provider. We offer high-quality solar panels, inverters, batteries, and complete solar energy solutions for residential, commercial, and industrial properties. Get up to 90% savings on electricity bills with government subsidy schemes like PM Surya Ghar." />
+        <meta name="keywords" content="solar panels, solar installation, solar energy, solar inverter, solar battery, rooftop solar, residential solar, commercial solar, solar subsidy, PM Surya Ghar, solar water pump, solar street light, solar heater, EV charging, off-grid solar, on-grid solar, hybrid solar, solar company India, best solar installation" />
+        <link rel="canonical" href="https://bharatsolarsolution.com/" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Bharat Solar Solution - Best Solar Installation Service Provider in India" />
+        <meta property="og:description" content="India's leading solar installation service provider. Get high-quality solar panels, inverters, batteries with up to 90% savings on electricity bills. Government subsidy available." />
+        <meta property="og:url" content="https://bharatsolarsolution.com/" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:title" content="Bharat Solar Solution - Best Solar Installation Service Provider in India" />
+        <meta name="twitter:description" content="India's leading solar installation service provider. Get high-quality solar panels, inverters, batteries with up to 90% savings on electricity bills." />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+      
+      <div className="overflow-x-hidden bg-gray-50">
       {/* ===== Category Scroller with Arrows ===== */}
-      <section className="py-8 bg-white relative">
+      <nav aria-label="Product categories" className="py-8 bg-white relative">
         <div className="container px-4 relative">
           {/* Left Arrow */}
           <button
@@ -262,7 +282,7 @@ const handleCategoryClick = (categoryName) => {
             <ChevronRight className="w-6 h-6 text-gray-700" />
           </button>
         </div>
-      </section>
+      </nav>
 
       <style>{`
         .animate-scroll-slow {
@@ -290,7 +310,7 @@ const handleCategoryClick = (categoryName) => {
       `}</style>
 
       {/* Hero Slider Section */}
-      <section className="relative h-[400px] text-white overflow-hidden">
+      <section aria-label="Hero slider showcasing solar installations" className="relative h-[400px] text-white overflow-hidden">
         {/* Photo Slider */}
         <div className="absolute inset-0">
           <AnimatePresence mode="wait">
@@ -374,7 +394,7 @@ const handleCategoryClick = (categoryName) => {
       </section>
 
       {/* Government Schemes Section */}
-      <section className="py-12 bg-gradient-to-r from-blue-50 via-white to-blue-50">
+      <section aria-label="Government solar subsidy schemes" className="py-12 bg-gradient-to-r from-blue-50 via-white to-blue-50">
         <div className="container px-4">
           {/* Section Heading */}
           <motion.div
@@ -445,7 +465,7 @@ const handleCategoryClick = (categoryName) => {
       </section>
 
       {/* Featured Products Section */}
-    <section className="py-12 bg-gray-50">
+    <section aria-label="Featured solar products" className="py-12 bg-gray-50">
   <div className="container mx-auto px-4">
     {/* Title */}
     <div className="flex items-center justify-between mb-8">
@@ -519,7 +539,7 @@ const handleCategoryClick = (categoryName) => {
 
 
       {/* Benefits Section */}
-      <section className="py-16 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+      <section aria-label="Benefits of solar energy" className="py-16 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
         <div className="container px-4 relative z-10">
           {/* Heading */}
           <motion.div
@@ -613,7 +633,7 @@ const handleCategoryClick = (categoryName) => {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 via-white to-blue-50">
+      <section aria-label="Solar installation process steps" className="py-16 bg-gradient-to-b from-blue-50 via-white to-blue-50">
         <div className="container px-6 mx-auto">
           {/* Heading */}
           <motion.div
@@ -715,7 +735,7 @@ const handleCategoryClick = (categoryName) => {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-20 bg-gradient-to-r from-blue-900 via-blue-800 to-teal-700 text-white overflow-hidden">
+      <section aria-label="Call to action for solar consultation" className="relative py-20 bg-gradient-to-r from-blue-900 via-blue-800 to-teal-700 text-white overflow-hidden">
         {/* Decorative Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
@@ -788,6 +808,7 @@ const handleCategoryClick = (categoryName) => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

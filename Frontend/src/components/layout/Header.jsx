@@ -145,7 +145,7 @@ const Header = () => {
               <div className="relative">
                 <img 
                   src={logo} 
-                  alt="Bharat Solar Solution Logo" 
+                  alt="Bharat Solar Solution Logo - Solar Installation Company in India" 
                   className={`h-12 w-12 object-contain transition-transform duration-300 group-hover:rotate-12 ${
                     isScrolled ? 'h-10 w-10' : 'h-12 w-12'
                   }`}

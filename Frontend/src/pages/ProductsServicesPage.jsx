@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Sun, BatteryCharging, HardHat, Wrench, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const fadeIn = {
   initial: { opacity: 0 },
@@ -81,7 +82,26 @@ const services = [
 
 const ProductsServicesPage = () => {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-16">
+    <>
+      <Helmet>
+        <title>Solar Products & Services - Bharat Solar Solution | Solar Panels, Inverters, Batteries & Installation</title>
+        <meta name="description" content="Explore our range of high-quality solar products including solar panels, inverters, and batteries. Get professional solar installation services, maintenance, and AMC for residential, commercial, and industrial properties." />
+        <meta name="keywords" content="solar products, solar panels, solar inverters, solar batteries, solar installation, solar maintenance, solar AMC, residential solar, commercial solar, industrial solar, solar services" />
+        <link rel="canonical" href="https://bharatsolarsolution.com/products-services" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Solar Products & Services - Bharat Solar Solution" />
+        <meta property="og:description" content="Explore our range of high-quality solar products including solar panels, inverters, and batteries. Get professional solar installation services." />
+        <meta property="og:url" content="https://bharatsolarsolution.com/products-services" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:title" content="Solar Products & Services - Bharat Solar Solution" />
+        <meta name="twitter:description" content="Explore our range of high-quality solar products including solar panels, inverters, and batteries. Get professional solar installation services." />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-16">
       <motion.section
         className="text-center"
         variants={fadeIn}
@@ -168,6 +188,7 @@ const ProductsServicesPage = () => {
         </div>
       </motion.section>
     </div>
+    </>
   );
 };
 

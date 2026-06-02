@@ -15,6 +15,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const fadeIn = {
   initial: { opacity: 0 },
@@ -103,7 +104,26 @@ const SolarProductsPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+    <>
+      <Helmet>
+        <title>Solar Products - Bharat Solar Solution | Buy Solar Panels, Inverters, Batteries Online</title>
+        <meta name="description" content="Browse our premium solar products including high-efficiency solar panels, inverters, batteries, water pumps, street lights, and more. Best prices with 25-year warranty. Shop online for residential and commercial solar systems." />
+        <meta name="keywords" content="solar panels for sale, buy solar inverter, solar battery price, solar water pump, solar street light, solar heater, EV charger, residential solar products, commercial solar products, solar equipment India" />
+        <link rel="canonical" href="https://bharatsolarsolution.com/solar-products" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Solar Products - Bharat Solar Solution" />
+        <meta property="og:description" content="Browse our premium solar products including high-efficiency solar panels, inverters, batteries, water pumps, street lights, and more. Best prices with 25-year warranty." />
+        <meta property="og:url" content="https://bharatsolarsolution.com/solar-products" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:title" content="Solar Products - Bharat Solar Solution" />
+        <meta name="twitter:description" content="Browse our premium solar products including high-efficiency solar panels, inverters, batteries, water pumps, street lights, and more." />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
       {/* Hero Section */}
       <motion.section
         className="text-center mb-16"
@@ -387,6 +407,7 @@ const SolarProductsPage = () => {
       </motion.section>
 
     </div>
+    </>
   );
 };
 

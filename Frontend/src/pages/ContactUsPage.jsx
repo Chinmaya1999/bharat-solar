@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Phone, Mail, MapPin, MessageCircle, Send } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { Helmet } from 'react-helmet';
 
 // We'll load Leaflet CSS and JS dynamically
 const fadeIn = {
@@ -159,7 +160,26 @@ const ContactUsPage = () => {
   }, [mapInitialized]);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+    <>
+      <Helmet>
+        <title>Contact Us - Bharat Solar Solution | Get Free Solar Consultation & Quote</title>
+        <meta name="description" content="Contact Bharat Solar Solution for free solar consultation and quotes. Call us at 7377899573 or visit our office in Uttarmundamuhan, Odisha. Get expert advice on solar panels, inverters, and installation." />
+        <meta name="keywords" content="contact solar company, solar consultation, solar quote, solar installation contact, Bharat Solar Solution contact, solar support, solar inquiry" />
+        <link rel="canonical" href="https://bharatsolarsolution.com/contact" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Contact Us - Bharat Solar Solution" />
+        <meta property="og:description" content="Contact Bharat Solar Solution for free solar consultation and quotes. Get expert advice on solar panels, inverters, and installation." />
+        <meta property="og:url" content="https://bharatsolarsolution.com/contact" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:title" content="Contact Us - Bharat Solar Solution" />
+        <meta name="twitter:description" content="Contact Bharat Solar Solution for free solar consultation and quotes. Get expert advice on solar panels, inverters, and installation." />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
       <motion.section
         className="text-center mb-12 md:mb-16"
         initial={{ opacity: 0, y: -20 }}
@@ -235,7 +255,7 @@ const ContactUsPage = () => {
                 <Phone className="h-6 w-6 text-emerald-600 mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h3 className="font-semibold text-foreground">Phone:</h3>
-                  <a href="tel:7377899573" className="text-muted-foreground hover:text-emerald-600 transition-colors">7377899573</a>
+                  <a href="tel:7377899573" className="text-muted-foreground hover:text-emerald-600 transition-colors">7377899573 / 8260872515</a>
                 </div>
               </div>
               <div className="flex items-start">
@@ -327,6 +347,7 @@ const ContactUsPage = () => {
         </div>
       </motion.div>
     </div>
+    </>
   );
 };
 
