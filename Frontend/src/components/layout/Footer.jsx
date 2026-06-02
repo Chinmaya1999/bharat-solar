@@ -72,7 +72,7 @@ const Footer = () => {
         {/* Bottom Bar - Ultra Compact */}
         <div className="mt-6 pt-4 border-t border-secondary-foreground/20">
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-muted-foreground" style={{ color: "white" }}>
-            <p>&copy; {currentYear} Bharat Solar. All rights reserved.</p>
+            <p>&copy; 2025 Bharat Solar. All rights reserved.</p>
             <p className="mt-1 sm:mt-0" style={{ color: "white" }}>Website by Chinmaya</p>
           </div>
         </div>
