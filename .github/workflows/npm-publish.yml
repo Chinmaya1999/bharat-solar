@@ -126,6 +126,10 @@ jobs:
             docker stop mern-backend || true
             docker rm mern-backend || true
             
+            # Remove the previous backend image (keep only the one we just pulled)
+            echo "=== Removing previous backend images ==="
+            docker images ${{ secrets.DOCKER_USERNAME }}/mern-backend --format "table {{.Repository}}:{{.Tag}} {{.ID}}" | grep -v "v1.${{ github.run_number }}" | grep -v "latest" | awk '{print $2}' | xargs -r docker rmi || true
+            
             # Run new backend container with version tag
             docker run -d \
               --name mern-backend \
@@ -149,6 +153,10 @@ jobs:
             docker stop mern-frontend || true
             docker rm mern-frontend || true
             
+            # Remove the previous frontend image (keep only the one we just pulled)
+            echo "=== Removing previous frontend images ==="
+            docker images ${{ secrets.DOCKER_USERNAME }}/mern-frontend --format "table {{.Repository}}:{{.Tag}} {{.ID}}" | grep -v "v1.${{ github.run_number }}" | grep -v "latest" | awk '{print $2}' | xargs -r docker rmi || true
+            
             # Run new frontend container on port 8080
             docker run -d \
               --name mern-frontend \
@@ -158,12 +166,19 @@ jobs:
             
             # ===== CLEANUP AND VERIFICATION =====
             
-            # Remove old images (keep only the latest 3 versions)
-            docker image prune -a --filter "until=24h" -f
+            # Remove dangling images (none tagged)
+            docker image prune -f
             
             # Tag the latest version for easy rollback
             docker tag ${{ secrets.DOCKER_USERNAME }}/mern-backend:v1.${{ github.run_number }} ${{ secrets.DOCKER_USERNAME }}/mern-backend:current || true
             docker tag ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }} ${{ secrets.DOCKER_USERNAME }}/mern-frontend:current || true
+            
+            # Show only the recent images (just pulled)
+            echo "=== Recent Backend Images (Only latest) ==="
+            docker images ${{ secrets.DOCKER_USERNAME }}/mern-backend --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}" | head -5
+            
+            echo "=== Recent Frontend Images (Only latest) ==="
+            docker images ${{ secrets.DOCKER_USERNAME }}/mern-frontend --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}" | head -5
             
             # Verify both containers are running
             echo "=== Container Status ==="
