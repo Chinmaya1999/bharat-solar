@@ -42,19 +42,19 @@ jobs:
             -f backend/Dockerfile \
             -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest \
             -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:v1.${{ github.run_number }} \
             backend
 
       - name: Push Backend Docker Image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:v1.${{ github.run_number }}
 
       # ========== FRONTEND DEPLOYMENT ==========
-      # Use the ACTUAL directory name (check from debug output)
       - name: Verify Frontend Files
         run: |
           echo "=== Frontend Files ==="
-          # Try different possible names - use the one that works
           if [ -d "Frontend" ]; then
             ls -la Frontend/
             find . -name "Dockerfile" | grep -i frontend
@@ -71,27 +71,41 @@ jobs:
 
       - name: Build Frontend Docker Image
         run: |
-          # Use the correct directory name (adjust based on your structure)
-          # Option 1: If directory is "Frontend" (capital F)
-          docker build \
-            -f Frontend/Dockerfile \
-            --build-arg VITE_API_URL=https://api.bharatsolarsolution.com \
-            -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest \
-            -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
-            Frontend
-          
-          # Option 2: If directory is "frontend" (lowercase f)
-          # docker build \
-          #   -f frontend/Dockerfile \
-          #   --build-arg VITE_API_URL=https://api.bharatsolarsolution.com \
-          #   -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest \
-          #   -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
-          #   frontend
+          # Use the correct directory name based on your structure
+          if [ -d "Frontend" ]; then
+            docker build \
+              -f Frontend/Dockerfile \
+              --build-arg VITE_API_URL=https://api.bharatsolarsolution.com \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }} \
+              Frontend
+          elif [ -d "frontend" ]; then
+            docker build \
+              -f frontend/Dockerfile \
+              --build-arg VITE_API_URL=https://api.bharatsolarsolution.com \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }} \
+              frontend
+          elif [ -d "client" ]; then
+            docker build \
+              -f client/Dockerfile \
+              --build-arg VITE_API_URL=https://api.bharatsolarsolution.com \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
+              -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }} \
+              client
+          else
+            echo "No frontend directory found!"
+            exit 1
+          fi
 
       - name: Push Frontend Docker Image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }}
 
       # ========== DEPLOY BOTH TO EC2 ==========
       - name: Deploy to EC2
@@ -104,14 +118,15 @@ jobs:
             # ===== BACKEND DEPLOYMENT =====
             echo "=== Deploying Backend ==="
             
+            # Pull the latest backend image
+            echo "Pulling backend image: ${{ secrets.DOCKER_USERNAME }}/mern-backend:v1.${{ github.run_number }}"
+            docker pull ${{ secrets.DOCKER_USERNAME }}/mern-backend:v1.${{ github.run_number }}
+            
             # Stop and remove existing backend container
             docker stop mern-backend || true
             docker rm mern-backend || true
             
-            # Pull the latest backend image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
-            
-            # Run new backend container
+            # Run new backend container with version tag
             docker run -d \
               --name mern-backend \
               -p 3001:3001 \
@@ -121,33 +136,43 @@ jobs:
               -e MONGODB_URI="${{ secrets.MONGODB_URI }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
               -e live_api_uri="https://api.bharatsolarsolution.com" \
-              ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
+              ${{ secrets.DOCKER_USERNAME }}/mern-backend:v1.${{ github.run_number }}
             
             # ===== FRONTEND DEPLOYMENT =====
             echo "=== Deploying Frontend ==="
+            
+            # Pull the latest frontend image
+            echo "Pulling frontend image: ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }}"
+            docker pull ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }}
             
             # Stop and remove existing frontend container
             docker stop mern-frontend || true
             docker rm mern-frontend || true
             
-            # Pull the latest frontend image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
-            
-            # Run new frontend container
+            # Run new frontend container on port 8080
             docker run -d \
               --name mern-frontend \
-              -p 80:80 \
+              -p 8080:80 \
               --restart unless-stopped \
-              ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
+              ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }}
             
             # ===== CLEANUP AND VERIFICATION =====
             
-            # Clean up old images
-            docker image prune -f
+            # Remove old images (keep only the latest 3 versions)
+            docker image prune -a --filter "until=24h" -f
+            
+            # Tag the latest version for easy rollback
+            docker tag ${{ secrets.DOCKER_USERNAME }}/mern-backend:v1.${{ github.run_number }} ${{ secrets.DOCKER_USERNAME }}/mern-backend:current || true
+            docker tag ${{ secrets.DOCKER_USERNAME }}/mern-frontend:v1.${{ github.run_number }} ${{ secrets.DOCKER_USERNAME }}/mern-frontend:current || true
             
             # Verify both containers are running
             echo "=== Container Status ==="
             docker ps | grep mern-
+            
+            # Show which versions are running
+            echo "=== Running Versions ==="
+            echo "Backend version: v1.${{ github.run_number }}"
+            echo "Frontend version: v1.${{ github.run_number }}"
             
             # Show backend logs
             echo "=== Backend Logs (last 20 lines) ==="
@@ -156,3 +181,12 @@ jobs:
             # Show frontend logs
             echo "=== Frontend Logs (last 20 lines) ==="
             docker logs --tail 20 mern-frontend
+            
+            # Health check for backend
+            echo "=== Backend Health Check ==="
+            sleep 5
+            curl -f http://localhost:3001/health || echo "Backend health check failed"
+            
+            # Health check for frontend
+            echo "=== Frontend Health Check ==="
+            curl -f http://localhost:8080 || echo "Frontend health check failed"
