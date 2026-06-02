@@ -63,7 +63,7 @@ const Footer = () => {
               </a>
             </div>
             <p className="text-sm text-gray-300">
-              Email: saiadityabehera@bharatsolar.com
+              Email: saiadityabehera@bharatsolarsolutions.com
             </p>
           </div>
         </div>
