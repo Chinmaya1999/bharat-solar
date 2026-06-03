@@ -36,7 +36,7 @@ const HomePage = () => {
   
 
   useEffect(() => {
-  fetch("https://api.bharatsolarsolution.com/api/products")
+  fetch("http://localhost:3001/api/products")
     .then((res) => res.json())
     .then((data) => setProducts(data.products || []))
     .catch((err) => console.error("Error fetching products:", err));
@@ -526,6 +526,9 @@ const handleCategoryClick = (categoryName) => {
                 src={product.image.startsWith('http') ? product.image : `https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                 alt={product.alt || product.title}
                 className="w-32 h-24 object-contain group-hover:scale-110 transition-transform duration-300"
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                }}
               />
             </div>
 

@@ -61,8 +61,10 @@ const deleteImage = async (req, res) => {
       return res.status(404).json({ error: 'Image not found' });
     }
     
-    // Delete file from filesystem
-    fs.unlinkSync(image.path);
+    // Delete file from filesystem (check if it exists first)
+    if (fs.existsSync(image.path)) {
+      fs.unlinkSync(image.path);
+    }
     
     // Delete from database
     await Image.findByIdAndDelete(req.params.id);

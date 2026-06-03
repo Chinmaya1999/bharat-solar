@@ -12,7 +12,10 @@ import {
   Star,
   CheckCircle,
   Shield,
-  Loader2
+  Loader2,
+  Search,
+  X,
+  SlidersHorizontal
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -27,37 +30,77 @@ const slideUp = (delay = 0) => ({
   animate: { opacity: 1, y: 0, transition: { duration: 0.6, delay } },
 });
 
-const categories = [
-  { id: 'all', name: 'All Products' },
+const categoryOptions = [
+  { id: 'all', name: 'All Categories' },
   { id: 'residential', name: 'Residential' },
   { id: 'commercial', name: 'Commercial' },
-  { id: 'Water Pumps', name: 'Water Pumps' },
-  { id: 'Street Lights', name: 'Street Lights' },
-  { id: 'Inverters', name: 'Inverters' },
-  { id: 'Heaters', name: 'Heaters' },
-  { id: 'EV Chargers', name: 'EV Chargers' }
-
+  { id: 'industrial', name: 'Industrial' },
+  { id: 'specialized', name: 'Specialized' }
 ];
 
 const SolarProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCompany, setSelectedCompany] = useState('all');
+  const [selectedProductType, setSelectedProductType] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showFilters, setShowFilters] = useState(true);
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedCategory]);
+    fetchCompanies();
+    fetchProductTypes();
+  }, [selectedCategory, selectedCompany, selectedProductType]);
+
+  useEffect(() => {
+    filterProducts();
+  }, [products, searchQuery]);
+
+  const filterProducts = () => {
+    if (!searchQuery) {
+      setFilteredProducts(products);
+      return;
+    }
+    const query = searchQuery.toLowerCase();
+    const filtered = products.filter(product => 
+      product.title.toLowerCase().includes(query) ||
+      product.description.toLowerCase().includes(query) ||
+      product.company.toLowerCase().includes(query) ||
+      product.category.toLowerCase().includes(query) ||
+      (product.productType && product.productType.toLowerCase().includes(query))
+    );
+    setFilteredProducts(filtered);
+  };
+
+  const fetchProductTypes = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/products/meta/product-types');
+      if (response.ok) {
+        const data = await response.json();
+        setProductTypes(data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching product types:', err);
+    }
+  };
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const url = selectedCategory === 'all'
-        ? 'https://api.bharatsolarsolution.com/api/products'
-        : `https://api.bharatsolarsolution.com/api/products?category=${selectedCategory}`;
+      const params = new URLSearchParams();
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
+      if (selectedCompany !== 'all') params.append('company', selectedCompany);
+      if (selectedProductType !== 'all') params.append('productType', selectedProductType);
+
+      const url = `http://localhost:3001/api/products?${params.toString()}`;
 
       const response = await fetch(url);
 
@@ -76,9 +119,27 @@ const SolarProductsPage = () => {
     }
   };
 
-  const filteredProducts = selectedCategory === 'all'
-    ? products
-    : products.filter(product => product.category === selectedCategory);
+  const fetchCompanies = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/products/meta/companies');
+      if (response.ok) {
+        const data = await response.json();
+        setCompanies(data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching companies:', err);
+    }
+  };
+
+  const clearFilters = () => {
+    setSelectedCategory('all');
+    setSelectedCompany('all');
+    setSelectedProductType('all');
+    setSearchQuery('');
+  };
+
+  const hasActiveFilters = selectedCategory !== 'all' || selectedCompany !== 'all' || selectedProductType !== 'all' || searchQuery !== '';
+
 
   if (loading) {
     return (
@@ -123,85 +184,217 @@ const SolarProductsPage = () => {
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-      {/* Hero Section */}
-      <motion.section
-        className="text-center mb-16"
-        variants={fadeIn}
-        initial="initial"
-        animate="animate"
-      >
-        <motion.h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4" variants={slideUp(0)}>
-          Premium <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">Solar Products</span>
-        </motion.h1>
-        <motion.p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto" variants={slideUp(0.2)}>
-          Discover our range of high-efficiency solar panels designed for residential, commercial, and industrial applications.
-        </motion.p>
-      </motion.section>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50">
+        {/* Hero Section */}
+        <motion.section
+          className="relative overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-orange-600 text-white py-20 lg:py-32"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-orange-600/70"></div>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-4xl"
+            >
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold mb-6 leading-tight">
+                Premium Solar
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-300 mt-2">
+                  Products Collection
+                </span>
+              </h1>
+              <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed">
+                Discover India's finest selection of solar panels, inverters, batteries, and complete solar energy solutions. 
+                Engineered for maximum efficiency and backed by industry-leading warranties.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                  <Sun className="h-5 w-5 text-yellow-300" />
+                  <span className="text-sm font-medium">25+ Years Warranty</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                  <Shield className="h-5 w-5 text-green-300" />
+                  <span className="text-sm font-medium">Certified Products</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                  <BatteryCharging className="h-5 w-5 text-orange-300" />
+                  <span className="text-sm font-medium">High Efficiency</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
 
-      {/* Category Filters */}
-      <motion.section
-        className="mb-12"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-6 bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-r from-blue-600 to-orange-500 p-2.5 rounded-xl">
-              <Filter className="h-5 w-5 text-white" />
+        {/* Search and Filter Section */}
+        <motion.section
+          className="container mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+            {/* Search Bar */}
+            <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+              <div className="relative">
+                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-blue-500" />
+                <input
+                  type="text"
+                  placeholder="Search solar products, brands, specifications..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-14 pr-14 py-4 border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all text-gray-900 text-lg placeholder-gray-400"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                )}
+              </div>
             </div>
-            <h3 className="font-bold text-gray-900">Filter by Category:</h3>
-          </div>
 
-          <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
-              <Button
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`rounded-full transition-all duration-300 ${
-                  selectedCategory === category.id 
-                    ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
-                    : 'border-2 border-gray-200 hover:border-blue-600 hover:text-blue-600'
-                }`}
-              >
-                {category.name}
-              </Button>
-            ))}
-          </div>
+            {/* Filters */}
+            <div className="p-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gradient-to-r from-blue-500 to-orange-500 p-2 rounded-xl">
+                    <SlidersHorizontal className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-lg">Filter Products</h3>
+                    <p className="text-sm text-gray-500">Find exactly what you need</p>
+                  </div>
+                  {hasActiveFilters && (
+                    <Button
+                      onClick={clearFilters}
+                      variant="outline"
+                      size="sm"
+                      className="ml-4 border-blue-500 text-blue-600 hover:bg-blue-50"
+                    >
+                      Clear All
+                    </Button>
+                  )}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  {showFilters ? 'Hide Filters' : 'Show Filters'}
+                  <ChevronRight className={`ml-2 h-4 w-4 transition-transform ${showFilters ? 'rotate-90' : ''}`} />
+                </Button>
+              </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant={viewMode === 'grid' ? "default" : "outline"}
-              size="icon"
-              onClick={() => setViewMode('grid')}
-              className={`rounded-xl transition-all duration-300 ${
-                viewMode === 'grid' 
-                  ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
-                  : 'border-2 border-gray-200 hover:border-blue-600'
-              }`}
-            >
-              <Grid className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? "default" : "outline"}
-              size="icon"
-              onClick={() => setViewMode('list')}
-              className={`rounded-xl transition-all duration-300 ${
-                viewMode === 'list' 
-                  ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
-                  : 'border-2 border-gray-200 hover:border-blue-600'
-              }`}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </motion.section>
+              {showFilters && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  {/* Category Filter */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all bg-white text-gray-900 font-medium"
+                    >
+                      {categoryOptions.map(category => (
+                        <option key={category.id} value={category.id}>{category.name}</option>
+                      ))}
+                    </select>
+                  </div>
 
+                  {/* Product Type Filter */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Product Type</label>
+                    <select
+                      value={selectedProductType}
+                      onChange={(e) => setSelectedProductType(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all bg-white text-gray-900 font-medium"
+                    >
+                      <option value="all">All Types</option>
+                      {productTypes.map(type => (
+                        <option key={type} value={type}>{type.replace('-', ' ').toUpperCase()}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Company Filter */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Company</label>
+                    <select
+                      value={selectedCompany}
+                      onChange={(e) => setSelectedCompany(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all bg-white text-gray-900 font-medium"
+                    >
+                      <option value="all">All Companies</option>
+                      {companies.map(company => (
+                        <option key={company} value={company}>{company}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* View Mode Toggle */}
+                  <div className="flex items-end">
+                    <label className="block text-sm font-bold text-gray-700 mb-2 w-full">View</label>
+                    <div className="flex gap-2 w-full">
+                      <Button
+                        variant={viewMode === 'grid' ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setViewMode('grid')}
+                        className={`flex-1 transition-all duration-300 ${
+                          viewMode === 'grid' 
+                            ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
+                            : 'border-2 border-gray-200 hover:border-blue-500'
+                        }`}
+                      >
+                        <Grid className="h-4 w-4 mr-2" /> Grid
+                      </Button>
+                      <Button
+                        variant={viewMode === 'list' ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setViewMode('list')}
+                        className={`flex-1 transition-all duration-300 ${
+                          viewMode === 'list' 
+                            ? 'bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white shadow-lg' 
+                            : 'border-2 border-gray-200 hover:border-blue-500'
+                        }`}
+                      >
+                        <List className="h-4 w-4 mr-2" /> List
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Results Count */}
+                  <div className="flex items-end">
+                    <div className="w-full">
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Results</label>
+                      <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-orange-50 rounded-xl border-2 border-blue-200">
+                        <span className="font-bold text-blue-600 text-lg">{filteredProducts.length}</span>
+                        <span className="text-gray-600 ml-1">products</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Products Section */}
+        <motion.section
+          className="container mx-auto px-4 sm:px-6 lg:px-8 py-12"
+          variants={fadeIn}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.1 }}
+        >
       {/* Products Grid */}
-      <motion.section
+      <motion.div
         className="mb-16"
         variants={fadeIn}
         initial="initial"
@@ -218,7 +411,7 @@ const SolarProductsPage = () => {
             </p>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product, index) => (
               <motion.div
                 key={product._id || product.id}
@@ -226,55 +419,66 @@ const SolarProductsPage = () => {
                 whileHover={{ y: -8 }}
                 className="h-full"
               >
-                <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 border-0 rounded-3xl bg-white shadow-lg">
-                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex justify-center group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:to-orange-50 transition-all duration-300">
+                <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-500 border-0 rounded-3xl bg-white shadow-xl flex flex-col">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex justify-center group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-orange-100 transition-all duration-500 h-56">
                     <img
-                      src={product.image.startsWith('http') ? product.image : `https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
+                      src={product.image.startsWith('http') ? product.image : `http://localhost:3001/${product.image.replace(/\\/g, "/")}`}
                       alt={product.alt || product.title}
-                      className="w-32 h-24 object-contain group-hover:scale-110 transition-transform duration-300"
+                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                      }}
                     />
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-600 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                      {product.category}
+                    <div className="absolute top-4 left-4 flex flex-col gap-2">
+                      <div className="bg-gradient-to-r from-blue-600 to-orange-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-lg">
+                        {product.category}
+                      </div>
+                      {product.productType && (
+                        <div className="bg-purple-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-lg">
+                          {product.productType.replace('-', ' ').toUpperCase()}
+                        </div>
+                      )}
                     </div>
+                    <div className="absolute top-4 right-4 bg-gray-900/90 backdrop-blur-sm text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-lg">
+                      {product.company}
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <CardHeader className="pb-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">{product.title}</CardTitle>
-                      <div className="flex items-center bg-gradient-to-r from-yellow-400 to-orange-400 px-2.5 py-1 rounded-full shadow-md">
-                        <Star className="h-4 w-4 fill-white text-white mr-1" />
-                        <span className="text-sm font-bold text-white">{product.rating}</span>
+                  <CardHeader className="pb-4 flex-grow">
+                    <div className="flex items-start justify-between mb-2">
+                      <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2 leading-tight">{product.title}</CardTitle>
+                      <div className="flex items-center bg-gradient-to-r from-yellow-400 to-orange-400 px-2 py-1 rounded-full shadow-md flex-shrink-0 ml-2">
+                        <Star className="h-3.5 w-3.5 fill-white text-white mr-1" />
+                        <span className="text-xs font-bold text-white">{product.rating}</span>
                       </div>
                     </div>
-                    <CardDescription className="text-gray-600 line-clamp-2">{product.description}</CardDescription>
+                    <CardDescription className="text-sm text-gray-600 line-clamp-2 leading-relaxed">{product.description}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="mb-4">
-                      <h4 className="font-bold mb-2 text-gray-900">Key Features:</h4>
-                      <ul className="space-y-1">
-                        {product.features.slice(0, 3).map((feature, i) => (
-                          <li key={i} className="flex items-start">
-                            <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm text-gray-600">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
+                  <CardContent className="pb-4">
+                    <div className="grid grid-cols-2 gap-3 text-sm bg-gradient-to-br from-gray-50 to-blue-50 p-4 rounded-2xl border border-gray-100">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-gray-900 text-xs uppercase tracking-wide mb-1">Power</span>
+                        <p className="text-gray-700 font-semibold">{product.specifications?.power}</p>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-bold text-gray-900 text-xs uppercase tracking-wide mb-1">Efficiency</span>
+                        <p className="text-gray-700 font-semibold">{product.specifications?.efficiency}</p>
+                      </div>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50 p-3 rounded-xl">
-                      <div>
-                        <span className="font-semibold text-gray-900">Power:</span>
-                        <p className="text-gray-600">{product.specifications?.power}</p>
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span className="text-xs font-semibold text-green-600">In Stock</span>
                       </div>
-                      <div>
-                        <span className="font-semibold text-gray-900">Efficiency:</span>
-                        <p className="text-gray-600">{product.specifications?.efficiency}</p>
-                      </div>
+                      <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-orange-500">
+                        ₹{product.price?.toLocaleString('en-IN')}
+                      </span>
                     </div>
                   </CardContent>
-                  <CardFooter className="flex justify-between pt-4">
+                  <CardFooter className="pt-4 border-t border-gray-100">
                     <Link to={`/quote-request?product=${product._id || product.id}`} className="w-full">
-                      <Button className="w-full bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        Request Quote <ChevronRight className="ml-2 h-4 w-4" />
+                      <Button className="w-full bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        Get Quote <ChevronRight className="ml-2 h-5 w-5" />
                       </Button>
                     </Link>
                   </CardFooter>
@@ -283,7 +487,7 @@ const SolarProductsPage = () => {
             ))}
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {filteredProducts.map((product, index) => (
               <motion.div
                 key={product._id || product.id}
@@ -294,7 +498,7 @@ const SolarProductsPage = () => {
                   <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/3">
                       <img
-                        src={product.image}
+                        src={product.image.startsWith('http') ? product.image : `http://localhost:3001/${product.image.replace(/\\/g, "/")}`}
                         alt={product.alt}
                         className="w-full h-60 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
@@ -305,7 +509,10 @@ const SolarProductsPage = () => {
                     <div className="md:w-2/3">
                       <CardHeader>
                         <div className="flex justify-between items-start mb-2">
-                          <CardTitle className="text-xl">{product.title}</CardTitle>
+                          <div>
+                            <CardTitle className="text-xl">{product.title}</CardTitle>
+                            <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full mt-1 inline-block">{product.company}</span>
+                          </div>
                           <div className="flex items-center bg-primary/10 px-2 py-1 rounded-full">
                             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
                             <span className="text-sm font-medium">{product.rating}</span>
@@ -363,7 +570,8 @@ const SolarProductsPage = () => {
             ))}
           </div>
         )}
-      </motion.section>
+      </motion.div>
+        </motion.section>
 
       {/* Benefits Section */}
       <motion.section

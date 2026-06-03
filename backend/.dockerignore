@@ -3,6 +3,4 @@ npm-debug.log
 .env
 .git
 .gitignore
-uploads/*
-!uploads/.gitkeep
 .DS_Store

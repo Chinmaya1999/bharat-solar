@@ -16,6 +16,15 @@ const productSchema = new mongoose.Schema({
     required: true,
     enum: ['residential', 'commercial', 'industrial', 'specialized']
   },
+  company: {
+    type: String,
+    required: true
+  },
+  productType: {
+    type: String,
+    required: true,
+    enum: ['solar-panels', 'inverters', 'batteries', 'water-pumps', 'street-lights', 'heaters', 'wires', 'accessories', 'ev-chargers']
+  },
   features: [{
     type: String,
     required: true
@@ -41,6 +50,10 @@ const productSchema = new mongoose.Schema({
   priceRange: {
     type: String,
     enum: ['$', '$$', '$$$', '$$$$'],
+    required: false
+  },
+  price: {
+    type: Number,
     required: true
   },
   rating: {

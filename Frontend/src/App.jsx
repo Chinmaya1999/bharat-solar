@@ -14,6 +14,7 @@ import PrivencyPolice from '@/pages/PrivencyPolice';
 import BlogPage from '@/pages/BlogPage';
 import SolarProductsPage from './pages/SolarProductsPage';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminPage from './pages/AdminPage';
 import Carrer from './pages/Career';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
              <Route path="/Admin" element={<AdminDashboard />} />
+             <Route path="/admin/products" element={<AdminPage />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/products-services" element={<ProductsServicesPage />} />
           <Route path="/how-it-works" element={<HowItWorksPage />} />
