@@ -36,7 +36,7 @@ const HomePage = () => {
   
 
   useEffect(() => {
-  fetch("http://localhost:3001/api/products")
+  fetch("http://api.bharatsolarsolution.com/api/products")
     .then((res) => res.json())
     .then((data) => setProducts(data.products || []))
     .catch((err) => console.error("Error fetching products:", err));

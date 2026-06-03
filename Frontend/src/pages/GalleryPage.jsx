@@ -130,9 +130,7 @@ const GalleryPage = () => {
                   className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                   alt={project.alt || project.title}
                   src={`https://api.bharatsolarsolution.com/uploads/${project.imageUrl.split('/').pop()}`}
-                  onError={(e) => {
-                    e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e7eb" width="400" height="300"/%3E%3Ctext fill="%236b7280" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage not available%3C/text%3E%3C/svg%3E';
-                  }}
+                 
                 />
                 <div className="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full">
                   {project.type === 'photo' ? <Camera size={20} /> : <Video size={20} />}

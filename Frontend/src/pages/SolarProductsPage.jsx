@@ -80,7 +80,7 @@ const SolarProductsPage = () => {
 
   const fetchProductTypes = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/products/meta/product-types');
+      const response = await fetch('http://api.bharatsolarsolution.com/api/products/meta/product-types');
       if (response.ok) {
         const data = await response.json();
         setProductTypes(data || []);
@@ -100,7 +100,7 @@ const SolarProductsPage = () => {
       if (selectedCompany !== 'all') params.append('company', selectedCompany);
       if (selectedProductType !== 'all') params.append('productType', selectedProductType);
 
-      const url = `http://localhost:3001/api/products?${params.toString()}`;
+      const url = `http://api.bharatsolarsolution.com/api/products?${params.toString()}`;
 
       const response = await fetch(url);
 
@@ -121,7 +121,7 @@ const SolarProductsPage = () => {
 
   const fetchCompanies = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/products/meta/companies');
+      const response = await fetch('http://api.bharatsolarsolution.com/api/products/meta/companies');
       if (response.ok) {
         const data = await response.json();
         setCompanies(data || []);
@@ -422,7 +422,7 @@ const SolarProductsPage = () => {
                 <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-500 border-0 rounded-3xl bg-white shadow-xl flex flex-col">
                   <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex justify-center group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-orange-100 transition-all duration-500 h-56">
                     <img
-                      src={product.image.startsWith('http') ? product.image : `http://localhost:3001/${product.image.replace(/\\/g, "/")}`}
+                      src={product.image.startsWith('http') ? product.image : `http://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                       alt={product.alt || product.title}
                       className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
@@ -498,7 +498,7 @@ const SolarProductsPage = () => {
                   <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/3">
                       <img
-                        src={product.image.startsWith('http') ? product.image : `http://localhost:3001/${product.image.replace(/\\/g, "/")}`}
+                        src={product.image.startsWith('http') ? product.image : `http://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                         alt={product.alt}
                         className="w-full h-60 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
