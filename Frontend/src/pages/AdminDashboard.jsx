@@ -26,7 +26,8 @@ import {
   ChevronDown,
   Download,
   Clock,
-  XCircle
+  XCircle,
+  Sun
 } from 'lucide-react';
 
 // Basic UI components
@@ -192,6 +193,40 @@ const AdminDashboard = () => {
   const [showGalleryForm, setShowGalleryForm] = useState(false);
   const [editingGalleryItem, setEditingGalleryItem] = useState(null);
 
+  // State for solar user management
+  const [solarUsers, setSolarUsers] = useState([]);
+  const [showSolarUserForm, setShowSolarUserForm] = useState(false);
+  const [editingSolarUser, setEditingSolarUser] = useState(null);
+  const [solarUserFilters, setSolarUserFilters] = useState({
+    status: 'all',
+    district: 'all',
+    search: ''
+  });
+  const [newSolarUser, setNewSolarUser] = useState({
+    fullName: '',
+    fatherName: '',
+    phone: '',
+    email: '',
+    address: '',
+    district: '',
+    state: '',
+    pincode: '',
+    schemeType: 'Surya Ghara Jojana',
+    consumerNumber: '',
+    electricityBoard: '',
+    monthlyConsumption: '',
+    roofArea: '',
+    proposedCapacity: ''
+  });
+  const [solarDocuments, setSolarDocuments] = useState({
+    aadharCard: null,
+    panCard: null,
+    electricityBill: null,
+    propertyDocument: null,
+    bankPassbook: null,
+    passportPhoto: null
+  });
+
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
     if (token) {
@@ -213,6 +248,11 @@ const AdminDashboard = () => {
       // Fetch gallery items if on gallery section
       if (activeSection === 'settings') {
         fetchGalleryItems();
+      }
+      
+      // Fetch solar users if on solar section
+      if (activeSection === 'solar') {
+        fetchSolarUsers();
       }
     }
   }, [activeSection]);
@@ -324,6 +364,170 @@ const AdminDashboard = () => {
       type: item.type
     });
     setShowGalleryForm(true);
+  };
+
+  // Solar user functions
+  const fetchSolarUsers = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(
+        `https://api.bharatsolarsolution.com/api/solar-users?status=${solarUserFilters.status}&district=${solarUserFilters.district}&search=${solarUserFilters.search}`,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        setSolarUsers(data);
+      }
+    } catch (error) {
+      console.error('Error fetching solar users:', error);
+    }
+  };
+
+  const handleSolarDocumentUpload = (e, docType) => {
+    setSolarDocuments({
+      ...solarDocuments,
+      [docType]: e.target.files[0]
+    });
+  };
+
+  const createOrUpdateSolarUser = async () => {
+    setUploading(true);
+    try {
+      const token = localStorage.getItem('adminToken');
+      const formData = new FormData();
+      
+      // Add form fields
+      Object.keys(newSolarUser).forEach(key => {
+        formData.append(key, newSolarUser[key]);
+      });
+      
+      // Add documents
+      Object.keys(solarDocuments).forEach(key => {
+        if (solarDocuments[key]) {
+          formData.append(key, solarDocuments[key]);
+        }
+      });
+
+      const endpoint = editingSolarUser 
+        ? `https://api.bharatsolarsolution.com/api/solar-users/${editingSolarUser._id}`
+        : 'https://api.bharatsolarsolution.com/api/solar-users';
+
+      const response = await fetch(endpoint, {
+        method: editingSolarUser ? 'PUT' : 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+      });
+
+      if (response.ok) {
+        alert(`Solar user ${editingSolarUser ? 'updated' : 'registered'} successfully`);
+        resetSolarUserForm();
+        fetchSolarUsers();
+      } else {
+        alert('Operation failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Operation error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const deleteSolarUser = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this solar user?')) return;
+    
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`https://api.bharatsolarsolution.com/api/solar-users/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        alert('Solar user deleted successfully');
+        fetchSolarUsers();
+      } else {
+        alert('Delete failed');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Delete error');
+    }
+  };
+
+  const updateSolarUserStatus = async (userId, status, remarks) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`https://api.bharatsolarsolution.com/api/solar-users/${userId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status, remarks })
+      });
+      
+      if (response.ok) {
+        alert('Status updated successfully');
+        fetchSolarUsers();
+      } else {
+        alert('Update failed');
+      }
+    } catch (error) {
+      console.error('Update error:', error);
+      alert('Update error');
+    }
+  };
+
+  const resetSolarUserForm = () => {
+    setNewSolarUser({
+      fullName: '',
+      fatherName: '',
+      phone: '',
+      email: '',
+      address: '',
+      district: '',
+      state: '',
+      pincode: '',
+      schemeType: 'Surya Ghara Jojana',
+      consumerNumber: '',
+      electricityBoard: '',
+      monthlyConsumption: '',
+      roofArea: '',
+      proposedCapacity: ''
+    });
+    setSolarDocuments({
+      aadharCard: null,
+      panCard: null,
+      electricityBill: null,
+      propertyDocument: null,
+      bankPassbook: null,
+      passportPhoto: null
+    });
+    setEditingSolarUser(null);
+    setShowSolarUserForm(false);
+  };
+
+  const editSolarUser = (user) => {
+    setEditingSolarUser(user);
+    setNewSolarUser({
+      fullName: user.fullName,
+      fatherName: user.fatherName,
+      phone: user.phone,
+      email: user.email,
+      address: user.address,
+      district: user.district,
+      state: user.state,
+      pincode: user.pincode,
+      schemeType: user.schemeType,
+      consumerNumber: user.consumerNumber,
+      electricityBoard: user.electricityBoard,
+      monthlyConsumption: user.monthlyConsumption,
+      roofArea: user.roofArea,
+      proposedCapacity: user.proposedCapacity
+    });
+    setShowSolarUserForm(true);
   };
 
   useEffect(() => {
@@ -861,6 +1065,7 @@ const AdminDashboard = () => {
     { id: 'service', label: 'Services', icon: <Briefcase size={18} /> },
     { id: 'blog', label: 'Blog', icon: <PenTool size={18} /> },
     { id: 'career', label: 'Career', icon: <UserPlus size={18} /> },
+    { id: 'solar', label: 'Solar Users', icon: <Sun size={18} /> },
     { id: 'settings', label: 'Gallery', icon: <ImageIcon size={18} /> },
   ];
 
@@ -1657,185 +1862,545 @@ const AdminDashboard = () => {
         </>
       )}
     </>
-  );
+    );
       
-  case 'settings':
-    return (
-      <>
-        {!showGalleryForm ? (
+      case 'settings':
+        return (
           <>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Gallery Management</h2>
-              <Button onClick={() => setShowGalleryForm(true)}>
-                <Plus className="mr-2 h-4 w-4" /> Add New Item
-              </Button>
-            </div>
+            {!showGalleryForm ? (
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold">Gallery Management</h2>
+                  <Button onClick={() => setShowGalleryForm(true)}>
+                    <Plus className="mr-2 h-4 w-4" /> Add New Item
+                  </Button>
+                </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Gallery Items</CardTitle>
-                <CardDescription>Manage your gallery photos and videos</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {galleryItems.map((item) => (
-                    <div key={item._id} className="border rounded-lg overflow-hidden">
-                      <div className="relative aspect-video bg-gray-200">
-                        {item.type === 'photo' ? (
-                          <img 
-                            src={`https://api.bharatsolarsolution.com${item.imageUrl}`} 
-                            alt={item.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex items-center justify-center h-full">
-                            <span className="text-gray-500">Video File</span>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Gallery Items</CardTitle>
+                    <CardDescription>Manage your gallery photos and videos</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {galleryItems.map((item) => (
+                        <div key={item._id} className="border rounded-lg overflow-hidden">
+                          <div className="relative aspect-video bg-gray-200">
+                            {item.type === 'photo' ? (
+                              <img 
+                                src={`https://api.bharatsolarsolution.com${item.imageUrl}`} 
+                                alt={item.title}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="flex items-center justify-center h-full">
+                                <span className="text-gray-500">Video File</span>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-medium">{item.title}</h3>
-                        <p className="text-sm text-gray-600">{item.category} • {item.location}</p>
-                        <p className="text-sm mt-1 line-clamp-2">{item.description}</p>
-                        <div className="flex justify-end space-x-2 mt-3">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => editGalleryItem(item)}
+                          <div className="p-4">
+                            <h3 className="font-medium">{item.title}</h3>
+                            <p className="text-sm text-gray-600">{item.category} • {item.location}</p>
+                            <p className="text-sm mt-1 line-clamp-2">{item.description}</p>
+                            <div className="flex justify-end space-x-2 mt-3">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => editGalleryItem(item)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => deleteGalleryItem(item._id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold">
+                    {editingGalleryItem ? 'Edit Gallery Item' : 'Add New Gallery Item'}
+                  </h2>
+                  <Button variant="outline" onClick={resetGalleryForm}>
+                    ← Back to Gallery
+                  </Button>
+                </div>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Gallery Item Details</CardTitle>
+                    <CardDescription>
+                      {editingGalleryItem ? 'Update the gallery item' : 'Add a new photo or video to your gallery'}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                          <Input
+                            type="text"
+                            placeholder="e.g., Solar Installation Project"
+                            value={newGalleryItem.title}
+                            onChange={(e) => setNewGalleryItem({...newGalleryItem, title: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                          <select
+                            value={newGalleryItem.category}
+                            onChange={(e) => setNewGalleryItem({...newGalleryItem, category: e.target.value})}
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                           >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => deleteGalleryItem(item._id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                            <option value="Residential">Residential</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Industrial">Industrial</option>
+                            <option value="Installation Process">Installation Process</option>
+                            <option value="Before & After">Before & After</option>
+                            <option value="Testimonials">Testimonials</option>
+                            <option value="Battery Systems">Battery Systems</option>
+                          </select>
                         </div>
                       </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>
+                          <Input
+                            type="text"
+                            placeholder="e.g., San Francisco, CA"
+                            value={newGalleryItem.location}
+                            onChange={(e) => setNewGalleryItem({...newGalleryItem, location: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Media Type *</label>
+                          <select
+                            value={newGalleryItem.type}
+                            onChange={(e) => setNewGalleryItem({...newGalleryItem, type: e.target.value})}
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value="photo">Photo</option>
+                            <option value="video">Video</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <Textarea
+                          placeholder="Describe this gallery item..."
+                          value={newGalleryItem.description}
+                          onChange={(e) => setNewGalleryItem({...newGalleryItem, description: e.target.value})}
+                          rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          {newGalleryItem.type === 'photo' ? 'Image' : 'Video'} File *
+                        </label>
+                        <Input
+                          id="gallery-file-input"
+                          type="file"
+                          accept={newGalleryItem.type === 'photo' ? 'image/*' : 'video/*'}
+                          onChange={handleGalleryUpload}
+                        />
+                        {editingGalleryItem && !galleryFile && (
+                          <p className="text-sm text-gray-500 mt-1">
+                            Current file will be kept if no new file is selected
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex justify-end space-x-4">
+                        <Button variant="outline" onClick={resetGalleryForm}>
+                          Cancel
+                        </Button>
+                        <Button 
+                          onClick={uploadGalleryItem}
+                          disabled={uploading || !newGalleryItem.title || !newGalleryItem.location || (!galleryFile && !editingGalleryItem)}
+                        >
+                          {uploading ? 'Saving...' : editingGalleryItem ? 'Update Item' : 'Add to Gallery'}
+                        </Button>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </>
-        ) : (
+        );
+      case 'solar':
+        return (
           <>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">
-                {editingGalleryItem ? 'Edit Gallery Item' : 'Add New Gallery Item'}
-              </h2>
-              <Button variant="outline" onClick={resetGalleryForm}>
-                ← Back to Gallery
-              </Button>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Gallery Item Details</CardTitle>
-                <CardDescription>
-                  {editingGalleryItem ? 'Update the gallery item' : 'Add a new photo or video to your gallery'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-                      <Input
-                        type="text"
-                        placeholder="e.g., Solar Installation Project"
-                        value={newGalleryItem.title}
-                        onChange={(e) => setNewGalleryItem({...newGalleryItem, title: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                      <select
-                        value={newGalleryItem.category}
-                        onChange={(e) => setNewGalleryItem({...newGalleryItem, category: e.target.value})}
-                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        <option value="Residential">Residential</option>
-                        <option value="Commercial">Commercial</option>
-                        <option value="Industrial">Industrial</option>
-                        <option value="Installation Process">Installation Process</option>
-                        <option value="Before & After">Before & After</option>
-                        <option value="Testimonials">Testimonials</option>
-                        <option value="Battery Systems">Battery Systems</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>
-                      <Input
-                        type="text"
-                        placeholder="e.g., San Francisco, CA"
-                        value={newGalleryItem.location}
-                        onChange={(e) => setNewGalleryItem({...newGalleryItem, location: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Media Type *</label>
-                      <select
-                        value={newGalleryItem.type}
-                        onChange={(e) => setNewGalleryItem({...newGalleryItem, type: e.target.value})}
-                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        <option value="photo">Photo</option>
-                        <option value="video">Video</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <Textarea
-                      placeholder="Describe this gallery item..."
-                      value={newGalleryItem.description}
-                      onChange={(e) => setNewGalleryItem({...newGalleryItem, description: e.target.value})}
-                      rows={3}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {newGalleryItem.type === 'photo' ? 'Image' : 'Video'} File *
-                    </label>
-                    <Input
-                      id="gallery-file-input"
-                      type="file"
-                      accept={newGalleryItem.type === 'photo' ? 'image/*' : 'video/*'}
-                      onChange={handleGalleryUpload}
-                    />
-                    {editingGalleryItem && !galleryFile && (
-                      <p className="text-sm text-gray-500 mt-1">
-                        Current file will be kept if no new file is selected
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex justify-end space-x-4">
-                    <Button variant="outline" onClick={resetGalleryForm}>
-                      Cancel
-                    </Button>
-                    <Button 
-                      onClick={uploadGalleryItem}
-                      disabled={uploading || !newGalleryItem.title || !newGalleryItem.location || (!galleryFile && !editingGalleryItem)}
-                    >
-                      {uploading ? 'Saving...' : editingGalleryItem ? 'Update Item' : 'Add to Gallery'}
-                    </Button>
-                  </div>
+            {!showSolarUserForm ? (
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold">Solar User Registration</h2>
+                  <Button onClick={() => setShowSolarUserForm(true)}>
+                    <Plus className="h-4 w-4 mr-2" /> Register New User
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
+
+                {/* Filters */}
+                <Card className="mb-6">
+                  <CardContent className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                        <Input
+                          type="text"
+                          placeholder="Search by name, phone, email..."
+                          value={solarUserFilters.search}
+                          onChange={(e) => setSolarUserFilters({...solarUserFilters, search: e.target.value})}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select
+                          value={solarUserFilters.status}
+                          onChange={(e) => setSolarUserFilters({...solarUserFilters, status: e.target.value})}
+                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="all">All Status</option>
+                          <option value="Pending">Pending</option>
+                          <option value="Under Review">Under Review</option>
+                          <option value="Document Verified">Document Verified</option>
+                          <option value="Approved">Approved</option>
+                          <option value="Rejected">Rejected</option>
+                          <option value="Installation In Progress">Installation In Progress</option>
+                          <option value="Completed">Completed</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
+                        <Input
+                          type="text"
+                          placeholder="Filter by district"
+                          value={solarUserFilters.district}
+                          onChange={(e) => setSolarUserFilters({...solarUserFilters, district: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <Button onClick={fetchSolarUsers}>Apply Filters</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Solar Users Table */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Registered Solar Users</CardTitle>
+                    <CardDescription>Manage Surya Ghara Jojana applications</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>App No.</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Phone</TableHead>
+                          <TableHead>District</TableHead>
+                          <TableHead>Scheme</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {solarUsers.map((user) => (
+                          <TableRow key={user._id}>
+                            <TableCell className="font-medium">{user.applicationNumber}</TableCell>
+                            <TableCell>{user.fullName}</TableCell>
+                            <TableCell>{user.phone}</TableCell>
+                            <TableCell>{user.district}</TableCell>
+                            <TableCell>{user.schemeType}</TableCell>
+                            <TableCell>{getStatusBadge(user.status)}</TableCell>
+                            <TableCell>
+                              <div className="flex space-x-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => editSolarUser(user)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newStatus = prompt('Enter new status:', user.status);
+                                    const remarks = prompt('Enter remarks:', user.remarks || '');
+                                    if (newStatus) updateSolarUserStatus(user._id, newStatus, remarks);
+                                  }}
+                                >
+                                  <CheckCircle className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={() => deleteSolarUser(user._id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold">
+                    {editingSolarUser ? 'Edit Solar User' : 'Register New Solar User'}
+                  </h2>
+                  <Button variant="outline" onClick={resetSolarUserForm}>
+                    ← Back to List
+                  </Button>
+                </div>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Surya Ghara Jojana Registration</CardTitle>
+                    <CardDescription>
+                      {editingSolarUser ? 'Update user details' : 'Register a new user for solar scheme'}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      {/* Personal Information */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-4 text-blue-600">Personal Information</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter full name"
+                              value={newSolarUser.fullName}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, fullName: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Father's Name *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter father's name"
+                              value={newSolarUser.fatherName}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, fatherName: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter phone number"
+                              value={newSolarUser.phone}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, phone: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                            <Input
+                              type="email"
+                              placeholder="Enter email"
+                              value={newSolarUser.email}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, email: e.target.value})}
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Address *</label>
+                            <Textarea
+                              placeholder="Enter full address"
+                              value={newSolarUser.address}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, address: e.target.value})}
+                              rows={2}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">District *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter district"
+                              value={newSolarUser.district}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, district: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter state"
+                              value={newSolarUser.state}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, state: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Pincode *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter pincode"
+                              value={newSolarUser.pincode}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, pincode: e.target.value})}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Scheme Details */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-4 text-green-600">Scheme Details</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Scheme Type *</label>
+                            <select
+                              value={newSolarUser.schemeType}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, schemeType: e.target.value})}
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="Surya Ghara Jojana">Surya Ghara Jojana</option>
+                              <option value="PM Surya Ghar Yojana">PM Surya Ghar Yojana</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Consumer Number *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter consumer number"
+                              value={newSolarUser.consumerNumber}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, consumerNumber: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Electricity Board *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter electricity board"
+                              value={newSolarUser.electricityBoard}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, electricityBoard: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Consumption *</label>
+                            <Input
+                              type="text"
+                              placeholder="e.g., 300 units"
+                              value={newSolarUser.monthlyConsumption}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, monthlyConsumption: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Roof Area (sq ft) *</label>
+                            <Input
+                              type="text"
+                              placeholder="Enter roof area"
+                              value={newSolarUser.roofArea}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, roofArea: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Proposed Capacity (kW) *</label>
+                            <Input
+                              type="text"
+                              placeholder="e.g., 3 kW"
+                              value={newSolarUser.proposedCapacity}
+                              onChange={(e) => setNewSolarUser({...newSolarUser, proposedCapacity: e.target.value})}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Document Uploads */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-4 text-purple-600">Document Uploads</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Aadhar Card</label>
+                            <Input
+                              type="file"
+                              accept="image/*,application/pdf"
+                              onChange={(e) => handleSolarDocumentUpload(e, 'aadharCard')}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">PAN Card</label>
+                            <Input
+                              type="file"
+                              accept="image/*,application/pdf"
+                              onChange={(e) => handleSolarDocumentUpload(e, 'panCard')}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Electricity Bill</label>
+                            <Input
+                              type="file"
+                              accept="image/*,application/pdf"
+                              onChange={(e) => handleSolarDocumentUpload(e, 'electricityBill')}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Property Document</label>
+                            <Input
+                              type="file"
+                              accept="image/*,application/pdf"
+                              onChange={(e) => handleSolarDocumentUpload(e, 'propertyDocument')}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Bank Passbook</label>
+                            <Input
+                              type="file"
+                              accept="image/*,application/pdf"
+                              onChange={(e) => handleSolarDocumentUpload(e, 'bankPassbook')}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Passport Photo</label>
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleSolarDocumentUpload(e, 'passportPhoto')}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end space-x-4">
+                        <Button variant="outline" onClick={resetSolarUserForm}>
+                          Cancel
+                        </Button>
+                        <Button 
+                          onClick={createOrUpdateSolarUser}
+                          disabled={uploading}
+                        >
+                          {uploading ? 'Saving...' : editingSolarUser ? 'Update User' : 'Register User'}
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </>
-        )}
-      </>
-    );
+        );
+      default:
+        return null;
     }
   };
 

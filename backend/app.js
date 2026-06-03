@@ -14,6 +14,7 @@ const Product = require('./routes/products');
 const jobRoutes = require('./routes/jobs'); // Add this line
 const applicationRoutes = require('./routes/applications'); // Add this line
 const galleryRoutes = require('./routes/gallery');
+const solarUserRoutes = require('./routes/solarUsers');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -39,6 +40,7 @@ app.use('/api/products', Product);
 app.use('/api/jobs', jobRoutes); // Add this line
 app.use('/api/applications', applicationRoutes); // Add this line
 app.use('/api/gallery', galleryRoutes);
+app.use('/api/solar-users', solarUserRoutes);
 
 // Global error handling middleware for Multer errors
 app.use((error, req, res, next) => {

@@ -126,11 +126,13 @@ const GalleryPage = () => {
           <motion.div key={project._id} variants={itemVariants}>
             <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="relative aspect-video bg-muted">
-                <img  
+                <img
                   className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                   alt={project.alt || project.title}
-                  src={`https://api.bharatsolarsolution.com/uploads/${project.imageUrl.split('/').pop()}`}
-                 
+                  src={project.imageUrl.startsWith('http') ? project.imageUrl : `https://api.bharatsolarsolution.com${project.imageUrl}`}
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                  }}
                 />
                 <div className="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full">
                   {project.type === 'photo' ? <Camera size={20} /> : <Video size={20} />}
