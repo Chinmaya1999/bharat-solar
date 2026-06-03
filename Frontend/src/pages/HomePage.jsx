@@ -523,7 +523,7 @@ const handleCategoryClick = (categoryName) => {
                 {product.category}
               </span>
               <img
-                src={`https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
+                src={product.image.startsWith('http') ? product.image : `https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                 alt={product.alt || product.title}
                 className="w-32 h-24 object-contain group-hover:scale-110 transition-transform duration-300"
               />

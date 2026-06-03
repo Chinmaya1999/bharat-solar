@@ -229,7 +229,7 @@ const SolarProductsPage = () => {
                 <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 border-0 rounded-3xl bg-white shadow-lg">
                   <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex justify-center group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:to-orange-50 transition-all duration-300">
                     <img
-                      src={`https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
+                      src={product.image.startsWith('http') ? product.image : `https://api.bharatsolarsolution.com/${product.image.replace(/\\/g, "/")}`}
                       alt={product.alt || product.title}
                       className="w-32 h-24 object-contain group-hover:scale-110 transition-transform duration-300"
                     />

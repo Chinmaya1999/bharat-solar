@@ -28,6 +28,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://chinmayadob1999:Ket3J
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use(express.static('public'));
 
 // Routes
 app.use('/api/auth', authRoutes);

@@ -71,7 +71,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-8 pt-8 border-t border-white/20">
           <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400">
-            <p>&copy; {currentYear} Bharat Solar. All rights reserved.</p>
+            <p>&copy; 2025 Bharat Solar. All rights reserved.</p>
             <p className="mt-2 sm:mt-0">Website by Chinmaya</p>
           </div>
         </div>

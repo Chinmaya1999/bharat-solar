@@ -1042,9 +1042,9 @@ const AdminDashboard = () => {
                         {products.map((product) => (
                           <TableRow key={product._id}>
                             <TableCell>
-                              <img 
-                                src={`https://api.bharatsolarsolution.com/${product.image}`} 
-                                alt={product.alt} 
+                              <img
+                                src={product.image.startsWith('http') ? product.image : `https://api.bharatsolarsolution.com/${product.image}`}
+                                alt={product.alt}
                                 className="h-10 w-16 object-cover rounded"
                                 onError={(e) => {
                                   e.target.src = 'https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
